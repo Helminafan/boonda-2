@@ -50,7 +50,7 @@ class AdminController extends Controller
         $user->assignRole('kolaborator'); // Assign the kolaborator role
         $user->save();
 
-        return redirect()->route('kolaborator.index')->with('success', 'Kolaborator created successfully.');
+        return redirect()->route('kolaborator.index.admin')->with('success', 'Kolaborator created successfully.');
     }
     public function showKolaborator($id)
     {
@@ -63,7 +63,7 @@ class AdminController extends Controller
         // Logic to edit kolaborator by ID
         $kolaborator = User::findOrFail($id);
         if (!$kolaborator) {
-            return redirect()->route('kolaborator.index')->with('error', 'Kolaborator not found.');
+            return redirect()->route('kolaborator.index.admin')->with('error', 'Kolaborator not found.');
         }
 
         return view('admin.kolaborator.edit', compact('kolaborator'));
@@ -100,7 +100,7 @@ class AdminController extends Controller
         $user->save();
 
 
-        return redirect()->route('kolaborator.index')->with('success', 'Kolaborator updated successfully.');
+        return redirect()->route('kolaborator.index.admin')->with('success', 'Kolaborator updated successfully.');
     }
     public function destroyKolaborator($id)
     {
@@ -110,7 +110,7 @@ class AdminController extends Controller
             Storage::delete($user->profile_photo_path);
         }
         $user->delete();
-        return redirect()->route('kolaborator.index')->with('success', 'Kolaborator deleted successfully.');
+        return redirect()->route('kolaborator.index.admin')->with('success', 'Kolaborator deleted successfully.');
     }
 
     public function costumer()
