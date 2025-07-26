@@ -49,7 +49,6 @@
                                             <th>Nama</th>
                                             <th>Email</th>
                                             <th>Role</th>
-
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -72,6 +71,8 @@
                                                         <div class="dropdown-menu" role="menu">
                                                             <a href="{{ route('kolaborator.edit', $item->id) }}"
                                                                 class="dropdown-item">Edit</a>
+                                                            <a href="{{route('kolaborator.ulasan.admin', $item->id)}}"
+                                                                class="dropdown-item">Ulasan</a>
                                                             <a class="dropdown-item"
                                                                 href="{{ route('kolaborator.delete', $item->id) }} "
                                                                 data-confirm-delete="true">Hapus</a>

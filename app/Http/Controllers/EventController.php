@@ -31,6 +31,8 @@ class EventController extends Controller
             'nama_event' => 'required|string|max:255',
             'deskripsi_event' => 'required|string',
             'tanggal' => 'required|date',
+            'kota' => 'required|string|max:255',
+            'fasilitas' => 'required|string|max:255',
             'waktu_mulai' => 'required|date_format:H:i',
             'harga' => 'required|integer',
             'lokasi' => 'required|string',
@@ -44,6 +46,8 @@ class EventController extends Controller
         $event->waktu_mulai = $request->waktu_mulai;
         $event->harga = $request->harga;
         $event->lokasi = $request->lokasi;
+        $event->kota = $request->kota;
+        $event->fasilitas = $request->fasilitas;
         $event->maps = $request->maps;
         $event->link_zoom = $request->link_zoom;
         $event->kuota = $request->kuota;
@@ -73,7 +77,9 @@ class EventController extends Controller
             'nama_event' => 'required|string|max:255',
             'deskripsi_event' => 'required|string',
             'tanggal' => 'required|date',
-            'waktu_mulai' => 'required|date_format:H:i',
+            'waktu_mulai' => 'required',
+            'fasilitas' => 'required',
+            'kota' => 'required',
             'harga' => 'required|integer',
             'lokasi' => 'required|string|max:255',
             'kuota' => 'required|integer',
@@ -83,6 +89,8 @@ class EventController extends Controller
         $event->nama_event = $request->nama_event;
         $event->deskripsi_event = $request->deskripsi_event;
         $event->tanggal = $request->tanggal;
+        $event->kota = $request->kota;
+        $event->fasilitas = $request->fasilitas;
         $event->waktu_mulai = $request->waktu_mulai;
         $event->harga = $request->harga;
         $event->lokasi = $request->lokasi;

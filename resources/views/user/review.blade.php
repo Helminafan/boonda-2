@@ -140,47 +140,35 @@
 
     {{-- batas nav --}}
     <section id="pay">
+        @include('sweetalert::alert')
         <div class="container mt-5 mb-5 pt-5">
-            @foreach ($data as $item)
-                <div class="card my-2">
 
-                    <div class="row p-4 align-items-center">
-
-                        <div class="col-3">
-                            <div class="card border mb-4" style="border-radius: 20px;">
-
-                                <img src="{{ asset('storage/' . $item->event->gambar) }}" alt="Design for Everyone"
-                                    class="card-img-top w-100" style="border-radius: 20px;">
-                            </div>
+            <h6 class="custom-titlegal mt-3 text-center">Review</h6>
+            <div class="card">
+                <form method="POST" action="{{route('user_review.store', $event->id)}}">
+                    @csrf
+                    <div class="row p-5">
+                        <div class=" mb-3 col-12">
+                            <label for="inputState" class="form-label">Bintang</label>
+                            <select name="bintang" id="inputState" class="form-control">
+                                <option value="" selected>Choose...</option>
+                                <option value="1">Bintang 1</option>
+                                <option value="2">Bintang 2</option>
+                                <option value="3">Bintang 3</option>
+                                <option value="4">Bintang 4</option>
+                                <option value="5">Bintang 5</option>
+                            </select>
                         </div>
-                        <!-- Content Column -->
-                        <div class="col-6">
-                            <div class="mb-2 p-2">
-                                <div class="title">{{ $item->event->nama_event }}</div>
-                                <div class="info">
-                                    <i class="bi-geo-alt"></i> {{ $item->event->lokasi }}
-                                    <br>
-                                    <i class="bi-calendar"></i> {{ $item->event->tanggal }}
-                                    <br>
-                                    <i class="bi-clock"></i> {{ $item->event->waktu_mulai }}
-                                </div>
-                                <div class="flex-fill text-primary">Rp.
-                                    {{ number_format($item->event->harga, 0, ',', '.') }}</div>
-                            </div>
+                        <div class="mb-3 col-12">
+                            <label for="exampleInputEmail1" class="form-label">Isi Review</label>
+                            <textarea name="isi_review" class="form-control" id="" cols="30" rows="10"></textarea>
                         </div>
-                        <div class="col">
-                            <form action="{{route('cetak.tiket',$item->id)}}" method="GET">
-                                @csrf
-                                <button class="btn btn-primary">cetak tiket</button>
-                            </form>
-                            <a href="{{route('user.review', $item->id_event)}}" class=" mt-3 btn btn-info text-light">Review</a>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-
+                        <button class=" mt-3 col btn btn-primary"> Tambah</button>
+                </form>
+            </div>
         </div>
         </div>
+
     </section>
 
 

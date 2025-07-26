@@ -63,4 +63,9 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    public function ulasan()
+    {
+        return $this->hasMany(Review::class, 'id_kolaborator')->where('status', 'aktif');
+    }
 }

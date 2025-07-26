@@ -169,7 +169,7 @@
                             <li><i class="bi bi-clock mr-1"style="color: rgba(255, 106, 138, 1);font-size: 16px;"></i>
                                 {{ $event->waktu_mulai }} - selesai </li>
                             <li><i class="bi bi-people mr-1"style="color: rgba(255, 106, 138, 1);font-size: 16px;"></i>
-                                Kuota {{ $event->kuota }} anak (sisa 32 slot)</li>
+                                Kuota {{ $event->kuota }} anak</li>
                         </ul>
                         <div class="text-left"style="font-size: 10px; font-weight: bold;">
                             {!! $event->deskripsi_event !!}
@@ -191,7 +191,9 @@
                                 alt="Kak Ale and Friend" style="width: 50px; height: 50px; margin-right: 10px;">
                             <div class="text-left" style="margin: 0;">
                                 <div style="font-size: 14px; color: #555;">{{ $event->kolaborator->name }}</div>
-                               
+                                <a href="{{ route('user.kolaborator', $event->kolaborator->id) }}"
+                                    class="text-primary mr-2"
+                                    style="text-decoration: none; display: block; font-size: 12px;">Lihat Profile</a>
                             </div>
                         </div>
 

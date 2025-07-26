@@ -44,6 +44,14 @@
               </p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="{{route('kolaborator.ulasan.view')}}" class="nav-link {{ request()->is('kolaborator/ulasan/*') ? 'active' : '' }}">
+              <i class="fas fa-comment-dots"></i>
+              <p>
+                Ulasan
+              </p>
+            </a>
+          </li>
           <li class="nav-item ">
             <a href="{{route('admin.logout')}}" class= "nav-link bg-danger">
              <i class="fas fa-sign-out-alt"></i>

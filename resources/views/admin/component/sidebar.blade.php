@@ -45,7 +45,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="{{route('kolaborator.index')}}" class="nav-link {{ request()->is('kolaborator/*') ? 'active' : '' }}">
+            <a href="{{route('kolaborator.index.admin')}}" class="nav-link {{ request()->is('kolabor/*') ? 'active' : '' }}">
               <i class="fas fa-user"></i>
               <p>
                 Kolaborator

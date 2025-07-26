@@ -33,6 +33,11 @@
                                     <div class="col">
                                         <h3 class="card-title">DataTable event</h3>
                                     </div>
+                                     <div class="col">
+                                        <a href="{{ route('kolaborator.event.add') }}" class="btn btn-primary float-right">Add
+                                            New
+                                            event</a>
+                                    </div>
                                   
                                 </div>
                             </div>
@@ -59,7 +64,7 @@
                                                 <td>{{ $item->kolaborator->name }}</td>
                                                 <td>{{ $item->tanggal }}</td>
                                                 <td>{{ $item->waktu_mulai }}</td>
-                                                <td>{{ $item->kuota }} (sisa 70)</td>
+                                                <td>{{ $item->kuota }}</td>
                                                 <td class="text-center">
                                                     <div class="btn-group">
                                                         <button type="button" class="btn btn-info">Action</button>
@@ -71,6 +76,10 @@
                                                         <div class="dropdown-menu" role="menu">
                                                             <a href="{{ route('kolaborator.event.show', $item->id) }}"
                                                                 class="dropdown-item">View</a>
+                                                            <a href="{{ route('kolaborator.event.edit', $item->id) }}"
+                                                                class="dropdown-item">Edit</a>
+                                                            <a href="{{ route('kolaborator.event.delete', $item->id) }}"
+                                                                class="dropdown-item">Hapus</a>
                                                             <a href="{{ route('kolaborator.event.peserta', $item->id) }}"
                                                                 class="dropdown-item">peserta</a>
                                                         </div>

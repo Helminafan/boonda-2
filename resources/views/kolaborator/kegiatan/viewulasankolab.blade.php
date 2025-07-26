@@ -1,4 +1,4 @@
-@extends('admin.master')
+@extends('kolaborator.master')
 @push('styles')
     <link rel="stylesheet" href="{{ asset('admin/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('admin/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
@@ -11,12 +11,12 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1>Event</h1>
+                        <h1>Ulasan</h1>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">event</li>
+                            <li class="breadcrumb-item active">Ulasan</li>
                         </ol>
                     </div>
                 </div>
@@ -31,13 +31,9 @@
                             <div class="card-header">
                                 <div class="row">
                                     <div class="col">
-                                        <h3 class="card-title">DataTable event</h3>
+                                        <h3 class="card-title">DataTable Review</h3>
                                     </div>
-                                    <div class="col">
-                                        <a href="{{ route('event.create') }}" class="btn btn-primary float-right">Add
-                                            New
-                                            event</a>
-                                    </div>
+
                                 </div>
                             </div>
                             <!-- /.card-header -->
@@ -45,59 +41,39 @@
                                 <table id="example2" class="table table-bordered table-hover">
                                     <thead>
                                         <tr>
-                                            <th>Foto Event</th>
-                                            <th>Nama Event</th>
-                                            <th>Kolaborator</th>
-                                            <th>Tanggal</th>
-                                            <th>Waktu</th>
-                                            <th>Iklan</th>
+                                            <th>Nama Pemberi Ulasan</th>
+                                            <th>Isi Ulasan</th>
+                                            <th>Bintang</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($events as $item)
+                                        @foreach ($ulasan as $item)
                                             <tr>
-                                                <td><img src="{{ asset('storage/' . $item->gambar) }} "
-                                                        alt="foto"style="width: 50px; height: 50px;"></td>
-                                                <td>{{ $item->nama_event }}</td>
-                                                <td>{{ $item->kolaborator->name }}</td>
-                                                <td>{{ $item->tanggal }}</td>
-                                                <td>{{ $item->waktu_mulai }}</td>
-                                                <td>
-                                                    <div class="col mx-3">
-                                                        @if ($item->keterangan == 'nonaktif')
-                                                            <form method="POST"
-                                                                action="{{ route('kolaborator.ulasan.aktif', $item->id) }}">
-                                                                @csrf
-                                                                <button class="btn btn-success">Aktif</button>
-                                                            </form>
-                                                        @endif
-                                                        @if ($item->keterangan == 'aktif')
-                                                            <form method="POST"
-                                                                action="{{ route('kolaborator.ulasan.aktif', $item->id) }}">
-                                                                @csrf
-                                                                <button class="btn btn-info">Nonaktif</button>
-                                                            </form>
-                                                        @endif
-                                                    </div>
-                                                </td>
+                                                <td>{{ $item->user->name }}</td>
+                                                <td>{{ $item->isi_review }}</td>
+                                                <td>{{ $item->bintang }}</td>
                                                 <td class="text-center">
-                                                    <div class="btn-group">
-                                                        <button type="button" class="btn btn-info">Action</button>
-                                                        <button type="button"
-                                                            class="btn btn-info dropdown-toggle dropdown-icon"
-                                                            data-toggle="dropdown">
-                                                            <span class="sr-only">Toggle Dropdown</span>
-                                                        </button>
-                                                        <div class="dropdown-menu" role="menu">
-                                                            <a href="{{ route('event.show', $item->id) }}"
-                                                                class="dropdown-item">View</a>
-                                                            <a href="{{ route('event.peserta', $item->id) }}"
-                                                                class="dropdown-item">peserta</a>
-                                                            <a href="{{ route('event.edit', $item->id) }}"
-                                                                class="dropdown-item">Edit</a>
-                                                            <a class="dropdown-item"
-                                                                href="{{ route('event.delete', $item->id) }} "
+                                                    <div class="row">
+                                                        <div class="col mx-3">
+                                                            @if ($item->status == 'nonaktif')
+                                                                <form method="POST"
+                                                                    action="{{ route('create.ulasan.aktif', $item->id) }}">
+                                                                    @csrf
+                                                                    <button class="btn btn-success">Aktif</button>
+                                                                </form>
+                                                            @endif
+                                                            @if ($item->status == 'aktif')
+                                                                <form method="POST"
+                                                                    action="{{ route('create.ulasan.aktif', $item->id) }}">
+                                                                    @csrf
+                                                                    <button class="btn btn-info">Nonaktif</button>
+                                                                </form>
+                                                            @endif
+                                                        </div>
+                                                        <div class="col">
+                                                            <a class="btn btn-danger"
+                                                                href="{{ route('detroy.ulasan_hapus', $item->id) }} "
                                                                 data-confirm-delete="true">Hapus</a>
                                                         </div>
                                                     </div>

@@ -1,4 +1,4 @@
-@extends('admin.master')
+@extends('kolaborator.master')
 @push('styles')
     <link rel="stylesheet" href="{{ asset('admin/plugins/select2/css/select2.min.css') }}">
 @endpush
@@ -29,7 +29,7 @@
                             </div>
                             <!-- /.card-header -->
                             <!-- form start -->
-                            <form id="quickForm" action="{{ route('event.store') }}" method="POST"
+                            <form id="quickForm" action="{{ route('kolaborator.event.store') }}" method="POST"
                                 enctype="multipart/form-data">
                                 @csrf
                                 <div class="card-body row">
@@ -37,16 +37,6 @@
                                         <label for="name">Nama Event</label>
                                         <input type="text" name="nama_event" class="form-control" id="name"
                                             placeholder="Nama Event">
-                                    </div>
-
-                                    <div class="form-group col-6">
-                                        <label>Kolaborator</label>
-                                        <select name="kolaborator_id" class="form-control " style="width: 100%;">
-                                            <option selected="selected" value="">Pilih Kolaborator</option>
-                                            @foreach ($kolaborators as $item)
-                                                <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                            @endforeach
-                                        </select>
                                     </div>
 
                                     <div class="form-group col-6">

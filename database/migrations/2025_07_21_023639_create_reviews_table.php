@@ -14,8 +14,11 @@ return new class extends Migration
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_user')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('id_kolaborator')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('id_event')->constrained('events')->onDelete('cascade')->onUpdate('cascade');
             $table->integer('bintang');
             $table->text('isi_review');
+            $table->enum('status',['aktif','nonaktif']);
             $table->timestamps();
         });
     }

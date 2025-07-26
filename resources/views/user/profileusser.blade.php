@@ -54,7 +54,7 @@
         </div>
         <section id="kolaborator">
             <div class="col text-center">
-                <h5 class="card-title custom-titlefax mb-3">Kolaborator</h5>
+                <h5 class="card-title custom-titlefax mb-3">Edit Profile</h5>
                 <div class="row d-flex flex-column align-items-center">
                     <div class="col d-flex justify-content-center">
                         <img src="{{ asset('storage/' . $kolaborator->profile_photo_path) }}" alt="Collaborator Profile"
@@ -63,65 +63,12 @@
                     <div class="item-details">
                         <p><strong style="color:rgba(255, 106, 138, 1); ">{{ $kolaborator->name }}</strong> </p>
                         <p>{{ $kolaborator->deskripsi }}</p>
-
                     </div>
 
                 </div>
             </div>
         </section>
-        <section id="ulasan" class="section">
-            <div class="container text-center">
-                <h6 class="custom-titlegal mt-3">Review</h6>
-                <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-                    <!-- Arrow buttons -->
-                    <button id="prevBtn" class="btn-arrow btn-prev active">
-                        <i class="bi bi-caret-left-fill"></i> <!-- Ikon untuk tombol sebelumnya -->
-
-                    </button>
-                    <button id="nextBtn" class="btn-arrow btn-next active">
-                        <i class="bi bi-caret-right-fill"></i> <!-- Ikon untuk tombol berikutnya -->
-
-                    </button>
-
-                    <!-- Indicators -->
-                    <ol class="carousel-indicators">
-                        @foreach ($kolaborator->ulasan as $index => $ulasan)
-                            <li data-target="#carouselExampleIndicators" data-slide-to="{{ $index }}"
-                                class="{{ $index == 0 ? 'active' : '' }}"></li>
-                        @endforeach
-                    </ol>
-
-
-                    <div class="carousel-inner">
-                        @foreach ($kolaborator->ulasan as $index => $ulasan)
-                            <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
-                                <div class="card testmonial-card border" style="border-radius: 20px;">
-                                    <div class="card-body">
-                                       <img src="https://ui-avatars.com/api/?name={{ $ulasan->user->name }}&background=random"
-                                                        
-                                                        alt="{{ $ulasan->user->name }}">
-                                        <div class="mb-2">
-                                            @for ($i = 1; $i <= 5; $i++)
-                                                @if ($i <= $ulasan->bintang)
-                                                    <i class="bi bi-star-fill text-warning"></i>
-                                                @else
-                                                    <i class="bi bi-star text-warning"></i>
-                                                @endif
-                                            @endfor
-                                        </div>
-                                        <h1 class="title">{{ $ulasan->user->name }}</h1>
-                                        {{-- Pastikan path benar --}}
-
-
-                                        <p class="subtitle">" {{ $ulasan->isi_review }} "</p>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-        </section>
+       
     </div>
     <footer class="custom-footer">
         <div class="footer-container">
@@ -212,24 +159,7 @@
 
     <!-- Bootstrap 5.1.3 JS (Tanpa jQuery) -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var carousel = document.querySelector('#carouselExampleIndicators');
-            var prevBtn = document.querySelector('#prevBtn');
-            var nextBtn = document.querySelector('#nextBtn');
-
-            // Setup event listeners untuk tombol panah
-            prevBtn.addEventListener('click', function() {
-                // Geser carousel ke slide sebelumnya
-                $(carousel).carousel('prev');
-            });
-
-            nextBtn.addEventListener('click', function() {
-                // Geser carousel ke slide berikutnya
-                $(carousel).carousel('next');
-            });
-        });
-    </script>
+    
 </body>
 
 </html>

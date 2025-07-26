@@ -6,6 +6,7 @@ use App\Models\Event;
 use App\Models\HargaEvent;
 use App\Models\Image;
 use App\Models\Pemesanan;
+use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,20 +14,55 @@ use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
-    public function userview()
+    public function userview(Request $request)
     {
+        // Images tetap
         $images = DB::table('images')
             ->orderBy('created_at', 'desc')
             ->limit(3)
             ->get();
 
-        $events = DB::table('events')
-            ->orderBy('created_at', 'desc')
-            ->limit(9)
-            ->get();
+        $kolaboratoruser = User::where('role','kolaborator')->get();
 
-        return view('user.index', compact('images', 'events'));
+        // Query Event awal (untuk filter dynamic)
+        $query = DB::table('events');
+
+        $kota = Event::all();
+
+        // Filter Kota
+        if ($request->filled('kota')) {
+            $query->where('kota', $request->kota);
+        }
+
+        // Filter Kolaborator
+        if ($request->filled('kolaborator_id')) {
+            $query->where('kolaborator_id', $request->kolaborator_id);
+        }
+
+        // Filter Fasilitas
+        if ($request->filled('fasilitas')) {
+            $query->where('fasilitas', $request->fasilitas);
+        }
+
+        // Filter Status
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        // Filter Rating
+        if ($request->filled('rating')) {
+            $query->where('rating', $request->rating);
+        }
+
+        // Ambil hasil akhir (limit 9)
+        $events = $query->orderBy('created_at', 'desc')->limit(9)->get();
+
+        // Iklan tetap
+        $iklan = DB::table('events')->where('keterangan', 'aktif')->get();
+
+        return view('user.index', compact('images', 'events', 'iklan', 'kolaboratoruser','kota'));
     }
+
 
 
     public function detailcard($id)
@@ -34,7 +70,7 @@ class UserController extends Controller
         $event = Event::where('id', $id)->first();
         $id_user = '';
         if (Auth::user()) {
-            $id_user= Auth::user()->id;
+            $id_user = Auth::user()->id;
         }
         $hargaevent = HargaEvent::where('event_id', $id)->get();
         $pemesanan = Pemesanan::where('id_user', $id_user)->where('id_event', $id)->get();
@@ -43,7 +79,7 @@ class UserController extends Controller
         if (!$event) {
             abort(404); // Event not found
         }
-        return view('user.detailcard', compact('event', 'hargaevent','pemesanan'));
+        return view('user.detailcard', compact('event', 'hargaevent', 'pemesanan'));
     }
 
 
@@ -70,6 +106,11 @@ class UserController extends Controller
 
         return view('user.galleri', compact('years', 'images', 'selectedYear', 'years2'));
     }
+    public function review($id)
+    {
+        $event = Event::find($id);
+        return view('user.review', compact('event'));
+    }
 
 
     public function katalog()
@@ -78,9 +119,10 @@ class UserController extends Controller
     }
 
 
-    public function kolaborator()
+    public function kolaborator($id)
     {
-        return view('user.kolaborator');
+        $kolaborator = User::with('ulasan')->find($id);
+        return view('user.kolaborator', compact('kolaborator'));
     }
 
     public function pembayaranevent(Request $request)
@@ -117,15 +159,37 @@ class UserController extends Controller
 
     public function pemesanan(Request $request)
     {
+        DB::beginTransaction(); // Mulai transaksi database
 
-        $pemesanan = new Pemesanan();
-        $pemesanan->id_user = Auth::user()->id;
-        $pemesanan->id_event = $request->id_event;
-        $pemesanan->harga = $request->harga;
-        $pemesanan->jenis_tiket = $request->jenis_tiket;
-        $pemesanan->status = "sudah_bayar";
-        $pemesanan->save();
-        return redirect()->route('user.index')->with('success', 'pemesanan_berhasil');
+        try {
+            $event = Event::findOrFail($request->id_event);
+
+            // Cek apakah kuota masih tersedia
+            if ($event->kuota <= 0) {
+                return redirect()->back()->with('error', 'Kuota tiket telah habis.');
+            }
+
+            // Kurangi kuota
+            $event->kuota -= 1;
+            $event->save();
+
+            // Simpan pemesanan
+            $pemesanan = new Pemesanan();
+            $pemesanan->id_user = Auth::id(); // lebih ringkas
+            $pemesanan->id_event = $request->id_event;
+            $pemesanan->harga = $request->harga;
+            $pemesanan->jenis_tiket = $request->jenis_tiket;
+            $pemesanan->status = 'sudah_bayar';
+            $pemesanan->save();
+
+            DB::commit(); // Commit jika tidak error
+
+            return redirect()->route('user.index')->with('success', 'Pemesanan berhasil.');
+        } catch (\Exception $e) {
+            DB::rollBack(); // Rollback jika terjadi error
+
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat memesan: ' . $e->getMessage());
+        }
     }
 
     public function kelasku_view()
@@ -137,11 +201,11 @@ class UserController extends Controller
 
     public function cetak($id)
     {
-        $tiket = Pemesanan::with('event','user')->findOrFail($id);
+        $tiket = Pemesanan::with('event', 'user')->findOrFail($id);
         $tanggal = $tiket->created_at->format('Ymd');
         $idFormatted = str_pad($tiket->id, 5, '0', STR_PAD_LEFT); // contoh: 00023
         $kode_tiket = "$tanggal-$idFormatted";
-        $pdf = Pdf::loadView('user.tiket', compact('tiket','kode_tiket'));
+        $pdf = Pdf::loadView('user.tiket', compact('tiket', 'kode_tiket'));
         return $pdf->stream('tiket.pdf');
     }
 }

@@ -94,6 +94,38 @@
                 </div>
             </div>
     </section>
+    <section id="ulasan" class="section">
+        <div class="container text-center">
+            <h6 class="custom-titlegal mt-3">Iklan</h6>
+            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                <!-- Arrow buttons -->
+                <button id="prevBtn" class="btn-arrow btn-prev active">
+                    <i class="bi bi-caret-left-fill"></i> <!-- Ikon untuk tombol sebelumnya -->
+                </button>
+                <button id="nextBtn" class="btn-arrow btn-next active">
+                    <i class="bi bi-caret-right-fill"></i> <!-- Ikon untuk tombol berikutnya -->
+                </button>
+                <!-- Indicators -->
+                <ol class="carousel-indicators">
+                    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                </ol>
+
+                <div class="carousel-inner">
+                    @foreach ($iklan as $item)
+                        <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
+                            <a href="{{ route('user.detailcard', $item->id) }}">
+                                <img src="{{ asset('storage/' . $item->gambar) }}" style="width: 1000px">
+                            </a>
+                        </div>
+                    @endforeach
+
+                </div>
+            </div>
+        </div>
+
+    </section>
     <!-- Katalog Section -->
     <section id="katalog" class="section mt-5"
         style="background-image: url('user/imgs/Vector.png');  background-size: cover; background-position: center; background-repeat: no-repeat; position: relative; z-index: 1;">
@@ -103,7 +135,6 @@
 
             <!-- Buttons and Dropdown Section -->
             <div class="mb-4 d-flex justify-content-between flex-wrap">
-
                 <!-- Dropdown Kota -->
                 <div class="dropdown flex-fill mx-1">
                     <button class="btn btn-katalog btn-sm rounded-pill dropdown-toggle w-100" type="button"
@@ -111,9 +142,12 @@
                         Kota
                     </button>
                     <ul class="dropdown-menu w-100 " aria-labelledby="dropdownTempat">
-                        <li><a class="dropdown-item" href="#">Malang</a></li>
-                        <li><a class="dropdown-item" href="#">Surabaya</a></li>
-                        <li><a class="dropdown-item" href="#">Mojokerto</a></li>
+                        @foreach ($kota->unique('kota') as $item)
+                            <li><a class="dropdown-item"
+                                    href="{{ request()->fullUrlWithQuery(['kota' => $item->kota]) }}">{{ $item->kota }}</a>
+                            </li>
+                        @endforeach
+
                     </ul>
                 </div>
                 <!-- Dropdown kolaborator -->
@@ -123,8 +157,12 @@
                         Kolaborator
                     </button>
                     <ul class="dropdown-menu w-100 " aria-labelledby="dropdownTempat">
-                        <li><a class="dropdown-item" href="#">Sertifikat</a></li>
-                        <li><a class="dropdown-item" href="#">Non Sertifikat</a></li>
+                        @foreach ($kolaboratoruser as $item)
+                            <li><a class="dropdown-item"
+                                    href="{{ request()->fullUrlWithQuery(['kolaborator_id' => $item->id]) }}">{{ $item->name }}</a>
+                            </li>
+                        @endforeach
+
                     </ul>
                 </div>
                 <!-- Dropdown fasilitas -->
@@ -134,8 +172,8 @@
                         fasilitas
                     </button>
                     <ul class="dropdown-menu w-100 " aria-labelledby="dropdownTempat">
-                        <li><a class="dropdown-item" href="#">Sertifikat</a></li>
-                        <li><a class="dropdown-item" href="#">Non Sertifikat</a></li>
+                        <li><a class="dropdown-item" href="{{ request()->fullUrlWithQuery(['fasilitas' => 'sertifikat']) }}">Sertifikat</a></li>
+                        <li><a class="dropdown-item" href="{{ request()->fullUrlWithQuery(['fasilitas' => 'non sertifikat']) }}">Non Sertifikat</a></li>
                     </ul>
                 </div>
                 <!-- Dropdown Status -->
@@ -144,26 +182,24 @@
                         id="dropdownTempat" data-toggle="dropdown" aria-expanded="false">
                         Status
                     </button>
-                    <ul class="dropdown-menu w-100 " aria-labelledby="dropdownTempat">
-                        <li><a class="dropdown-item" href="#">Online</a></li>
-                        <li><a class="dropdown-item" href="#">Offline</a></li>
+                    <ul class="dropdown-menu w-100" aria-labelledby="dropdownTempat">
+                        <li><a class="dropdown-item"
+                                href="{{ request()->fullUrlWithQuery(['status' => 'online']) }}">Online</a></li>
+                        <li><a class="dropdown-item"
+                                href="{{ request()->fullUrlWithQuery(['status' => 'offline']) }}">Offline</a></li>
                     </ul>
                 </div>
 
+
                 <!-- Dropdown rating-->
-                <div class="dropdown flex-fill mx-1">
-                    <button class="btn btn-katalog btn-sm rounded-pill dropdown-toggle w-100" type="button"
-                        id="dropdownUsia" data-toggle="dropdown" aria-expanded="false">
-                        Rating
-                    </button>
-                    <ul class="dropdown-menu w-100" aria-labelledby="dropdownUsia">
-                        <li><a class="dropdown-item" href="#">bintang 1</a></li>
-                        <li><a class="dropdown-item" href="#">bintang 2</a></li>
-                        <li><a class="dropdown-item" href="#">bintang 3</a></li>
-                        <li><a class="dropdown-item" href="#">bintang 4</a></li>
-                        <li><a class="dropdown-item" href="#">bintang 5</a></li>
-                    </ul>
-                </div>
+                @if (request()->anyFilled(['kota', 'status', 'rating', 'kolaborator', 'fasilitas']))
+                    <div class=" flex-fill mx-1">
+
+
+                        <a href="{{ route('user.index') }}" class="btn btn-danger btn-sm rounded-pill w-100">Reset
+                            Filter</a>
+                    </div>
+                @endif
             </div>
 
             <div class="row text-left">
@@ -207,90 +243,7 @@
 
 
     <!-- Testmonial Section -->
-    <section id="ulasan" class="section">
-        <div class="container text-center">
-            <h6 class="custom-titlegal mt-3">Testimonial</h6>
 
-
-            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-                <!-- Arrow buttons -->
-                <button id="prevBtn" class="btn-arrow btn-prev active">
-                    <i class="bi bi-caret-left-fill"></i> <!-- Ikon untuk tombol sebelumnya -->
-
-                </button>
-                <button id="nextBtn" class="btn-arrow btn-next active">
-                    <i class="bi bi-caret-right-fill"></i> <!-- Ikon untuk tombol berikutnya -->
-
-                </button>
-
-                <!-- Indicators -->
-                <ol class="carousel-indicators">
-                    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-                    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-                </ol>
-
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <div class="card testmonial-card border"style=" border-radius: 20px;">
-                            <div class="card-body">
-                                <img src="user/imgs/avatar-1.jpg" alt="">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magnam nostrum voluptates
-                                    in enim vel amet?</p>
-                                <h1 class="title">Emma Re</h1>
-                                <h1 class="subtitle">Graphic Designer</h1>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <div class="card testmonial-card border"style="border-radius: 20px;">
-                            <div class="card-body">
-                                <img src="user/imgs/avatar-2.jpg" alt="">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magnam nostrum voluptates
-                                    in enim vel amet?</p>
-                                <h1 class="title">James Bert</h1>
-                                <h1 class="subtitle">Web Designer</h1>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <div class="card testmonial-card border"style="border-radius: 20px;">
-                            <div class="card-body">
-                                <img src="user/imgs/blog-3.jpg" alt="">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magnam nostrum voluptates
-                                    in enim vel amet?</p>
-                                <h1 class="title">helmi</h1>
-                                <h1 class="subtitle">Web Designer</h1>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <div class="card testmonial-card border"style="border-radius: 20px;">
-                            <div class="card-body">
-                                <img src="user/imgs/blog-2.jpg" alt="">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magnam nostrum voluptates
-                                    in enim vel amet?</p>
-                                <h1 class="title">sincan</h1>
-                                <h1 class="subtitle">Ceo</h1>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <div class="card testmonial-card "style="border-radius: 20px;">
-                            <div class="card-body">
-                                <img src="user/imgs/avatar-3.jpg" alt="">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magnam nostrum voluptates
-                                    in enim vel amet?</p>
-                                <h1 class="title">Michael Abra</h1>
-                                <h1 class="subtitle">Web Developer</h1>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </section>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var carousel = document.querySelector('#carouselExampleIndicators');

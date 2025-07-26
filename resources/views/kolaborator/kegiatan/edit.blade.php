@@ -1,4 +1,4 @@
-@extends('admin.master')
+@extends('kolaborator.master')
 @push('styles')
     <link rel="stylesheet" href="{{ asset('admin/plugins/select2/css/select2.min.css') }}">
 @endpush
@@ -25,17 +25,17 @@
                         <!-- jquery validation -->
                         <div class="card ccard card-outline card-info">
                             <div class="card-header">
-                                <h3 class="card-title">Form Tambah Event</h3>
+                                <h3 class="card-title">Form Edit Event</h3>
                             </div>
                             <!-- /.card-header -->
                             <!-- form start -->
-                            <form id="quickForm" action="{{ route('event.store') }}" method="POST"
+                            <form id="quickForm" action="{{ route('kolaborator.event.update', $event->id) }}" method="POST"
                                 enctype="multipart/form-data">
                                 @csrf
                                 <div class="card-body row">
                                     <div class="form-group col-6">
                                         <label for="name">Nama Event</label>
-                                        <input type="text" name="nama_event" class="form-control" id="name"
+                                        <input type="text" name="nama_event" value="{{$event->nama_event}}" class="form-control" id="name"
                                             placeholder="Nama Event">
                                     </div>
 
@@ -44,7 +44,7 @@
                                         <select name="kolaborator_id" class="form-control " style="width: 100%;">
                                             <option selected="selected" value="">Pilih Kolaborator</option>
                                             @foreach ($kolaborators as $item)
-                                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                                <option value="{{ $item->id}}"  {{ $item->id == $event->kolaborator_id ? 'selected="selected"' : '' }}>{{ $item->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -52,57 +52,58 @@
                                     <div class="form-group col-6">
                                         <label for="harga">Harga</label>
                                         <div class="custom-file">
-                                            <input type="number" name="harga" class="form-control"
+                                            <input type="number" value="{{$event->harga}}" name="harga" class="form-control"
                                                 placeholder="masukan harga">
                                         </div>
                                     </div>
                                     <div class="form-group col-6">
                                         <label for="harga">tanggal</label>
                                         <div class="custom-file">
-                                            <input type="date" name="tanggal" class="form-control"
+                                            <input type="date" name="tanggal" value="{{$event->tanggal}}"  class="form-control"
                                                 placeholder="nomor hp Event">
                                         </div>
                                     </div>
                                     <div class="form-group col-6">
-                                        <label for="kota">Kota</label>
+                                        <label for="waktu_mulai">Kota</label>
                                         <div class="custom-file">
-                                            <input type="text" name="kota" class="form-control" 
+                                            <input type="text" name="kota" value="{{$event->kota}}" class="form-control" 
                                                 placeholder="masukan Lokasi event">
                                         </div>
                                     </div>
                                     <div class="form-group col-6">
                                         <label for="waktu_mulai">Lokasi</label>
                                         <div class="custom-file">
-                                            <input type="text" name="lokasi" class="form-control" 
+                                            <input type="text" name="lokasi" value="{{$event->lokasi}}" class="form-control" 
                                                 placeholder="masukan Lokasi event">
                                         </div>
                                     </div>
                                     <div class="form-group col-6">
                                         <label for="waktu_mulai">Waktu Mulai</label>
                                         <div class="custom-file">
-                                            <input type="time" name="waktu_mulai" class="form-control" id="waktu_mulai"
+                                            <input type="time" name="waktu_mulai" value="{{$event->waktu_mulai}}" class="form-control" id="waktu_mulai"
                                                 placeholder="waktu_mulai untuk login Event">
                                         </div>
                                     </div>
                                     <div class="form-group col-6">
                                         <label>Fasilitas</label>
-                                        <select name="fasilitas" class="form-control" id="fasilitas" style="width: 100%;">
-                                            <option value="setifikat">Sertifikat</option>
-                                            <option value="non sertifikat">Non Sertifikat</option>
+                                        <select name="fasilitas" class="form-control" id="status" style="width: 100%;">
+                                            <option value=""  >Pilih Fasilitas</option>
+                                            <option value="sertifikat" {{ $event->fasilitas == 'sertifikat' ? 'selected="selected"' : '' }} >Sertifikat</option>
+                                            <option value="non sertifikat" {{ $event->fasilitas == 'non sertifikat' ? 'selected="selected"' : '' }}>Non Sertifikat</option>
                                         </select>
                                     </div>
                                     <div class="form-group col-6">
                                         <label>Status</label>
                                         <select name="status" class="form-control" id="status" style="width: 100%;">
-                                            <option value="offline">Offline</option>
-                                            <option value="online">Online</option>
+                                            <option value="offline" {{ $event->status == 'offline' ? 'selected="selected"' : '' }} >Offline</option>
+                                            <option value="online" {{ $event->status == 'online' ? 'selected="selected"' : '' }}>Online</option>
                                         </select>
                                     </div>
 
                                     <div class="form-group col-6" id="lokasi-wrapper">
                                         <label for="lokasi">Maps</label>
                                         <div class="custom-file">
-                                            <input type="text" name="maps" class="form-control" id="lokasi"
+                                            <input type="text" value="{{$event->maps}}" name="maps" class="form-control" id="lokasi"
                                                 placeholder="Masukkan lokasi maps <frame..... ">
                                         </div>
                                     </div>
@@ -110,7 +111,7 @@
                                     <div class="form-group col-6">
                                         <label for="waktu_mulai">kuota</label>
                                         <div class="custom-file">
-                                            <input type="number" name="kuota" class="form-control" id="waktu_mulai"
+                                            <input type="number" value="{{$event->kuota}}" name="kuota" class="form-control" id="waktu_mulai"
                                                 placeholder="masukan kouta event">
                                         </div>
                                     </div>
@@ -128,7 +129,7 @@
                                     <div class="form-group col-12">
                                         <label for="deskripsi">Deskripsi</label>
                                         <div>
-                                            <textarea name="deskripsi_event" id="summernote"></textarea>
+                                            <textarea name="deskripsi_event" id="summernote"> {!!$event->deskripsi_event!!}</textarea>
                                         </div>
                                     </div>
                                 </div>
