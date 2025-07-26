@@ -65,16 +65,16 @@
                                                 <td>{{ $item->waktu_mulai }}</td>
                                                 <td>
                                                     <div class="col mx-3">
-                                                        @if ($item->keterangan == 'nonaktif')
+                                                        @if ($item->keterangan == 'tidak_aktif')
                                                             <form method="POST"
-                                                                action="{{ route('kolaborator.ulasan.aktif', $item->id) }}">
-                                                                @csrf
+                                                                action="{{ route('iklan.aktif', $item->id) }}">
+                                                                @csrf 
                                                                 <button class="btn btn-success">Aktif</button>
                                                             </form>
                                                         @endif
                                                         @if ($item->keterangan == 'aktif')
                                                             <form method="POST"
-                                                                action="{{ route('kolaborator.ulasan.aktif', $item->id) }}">
+                                                                action="{{ route('iklan.aktif', $item->id) }}">
                                                                 @csrf
                                                                 <button class="btn btn-info">Nonaktif</button>
                                                             </form>

@@ -76,7 +76,8 @@ Route::middleware([
         Route::get('/event_peserta/{id}', [EventController::class, 'peserta'])->name('event.peserta');
         Route::post('/event_update/{id}', [EventController::class, 'update'])->name('event.update');
         Route::delete('/eventdelete/{id}', [EventController::class, 'destroy'])->name('event.delete');
-        Route::post('/store_harga/{id}', [EventController::class, 'storeHargaEvent'])->name('harga.store');
+        Route::post('/store_harga/{id}', [EventController::class, 'storeHargaEvent'])->name('harga.store'); 
+        Route::post('/iklan_event/{id}', [EventController::class, 'aktifIklan'])->name('iklan.aktif'); 
     });
 
     Route::group(['prefix' => 'pelanggan'], function () {

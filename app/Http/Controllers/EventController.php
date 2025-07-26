@@ -51,7 +51,7 @@ class EventController extends Controller
         $event->maps = $request->maps;
         $event->link_zoom = $request->link_zoom;
         $event->kuota = $request->kuota;
-        $event->keterangan = 'aktif';
+        $event->keterangan = 'tidak_aktif';
         // Handle image upload if necessary
         if ($request->hasFile('gambar')) {
             $event->gambar = $request->file('gambar')->store('events', 'public');
@@ -133,5 +133,23 @@ class EventController extends Controller
 
         $peserta = Pemesanan::with('event','user')->where('id_event', $id)->get();
         return view('admin.event.peserta', compact('peserta'));
+    }
+
+     public function aktifIklan($id)
+    {
+        $ulasan = Event::find($id);
+
+        if ($ulasan->keterangan == 'aktif') {
+            $ulasan->keterangan = 'tidak_aktif';
+            $ulasan->save();
+            return redirect()->route('event.index');
+        }
+        if ($ulasan->keterangan == 'tidak_aktif') {
+            $ulasan->keterangan = 'aktif';
+            $ulasan->save();
+            return redirect()->route('event.index'
+        
+        );
+        }
     }
 }
