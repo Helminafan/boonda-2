@@ -334,9 +334,7 @@
                     </div>
                 </div>
 
-                <div class="col text-center mt-4 ">
-                    <a href="/katalog"class="btn btn-primary rounded-pill">Selengkapnya ...</a>
-                </div>
+              
             </div>
         </div>
     </section>

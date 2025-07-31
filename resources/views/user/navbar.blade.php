@@ -19,7 +19,7 @@
                     <a class="nav-link text-white" href="{{ url('/') }}#katalog">Katalog</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="{{ url('/') }}#ulasan">Testimoni</a>
+                    <a class="nav-link text-white" href="{{ url('/') }}#ulasan">Iklan</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-white" href="{{ url('/') }}#galeri">Gallery</a>

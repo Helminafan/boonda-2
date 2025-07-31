@@ -102,7 +102,7 @@
             <!-- Button to add images -->
             
         </div>
-        <a class="btn btn-primary add-image-btn rounded-pill  mt-3" href="{{ route('images.index') }}">Tambah Gambar</a>
+      
     </div>
 </section>
 

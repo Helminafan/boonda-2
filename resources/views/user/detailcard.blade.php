@@ -233,18 +233,21 @@
                                 </div>
 
                             </div>
-                            @auth
-                                <!-- Sudah login -->
-                                <button class="btn-card btn-primary rounded-pill"
-                                    onclick="bayar({{ $event->harga }}, {{ $event->id }}, '{{ addslashes('Early Bird') }}')">
-                                    Pesan
-                                </button>
-                            @else
-                                <!-- Belum login -->
-                                <a href="{{ route('login') }}" class="btn-card text-center btn-primary rounded-pill">
-                                    Pesan
-                                </a>
-                            @endauth
+                            @if ($event->kuota > 0)
+                                @auth
+                                    <!-- Sudah login -->
+                                    <button class="btn-card btn-primary rounded-pill"
+                                        onclick="bayar({{ $event->harga }}, {{ $event->id }}, '{{ addslashes('Early Bird') }}')">
+                                        Pesan
+                                    </button>
+                                @else
+                                    <!-- Belum login -->
+                                    <a href="{{ route('login') }}" class="btn-card text-center btn-primary rounded-pill">
+                                        Pesan
+                                    </a>
+                                @endauth
+                            @endif
+
 
 
                         </div>
@@ -255,20 +258,21 @@
                                     <p>{{ $itemharga->nama_harga }}</p>
                                     <div class="item-price">
                                         <p>Rp. {{ number_format($itemharga->harga, 0, ',', '.') }}</p>
-
                                     </div>
-
                                 </div>
-                                @auth
+                                @if ($event->kuota > 0)
+                                    @auth
 
-                                    <button class="btn-card btn-primary rounded-pill"
-                                        onclick="bayar({{ $itemharga->harga }}, {{ $event->id }}, '{{ addslashes($itemharga->nama_harga) }}')">Pesan</button>
-                                @else
-                                    <!-- Belum login -->
-                                    <a href="{{ route('login') }}" class="btn-card text-center btn-primary rounded-pill">
-                                        Pesan
-                                    </a>
-                                @endauth
+                                        <button class="btn-card btn-primary rounded-pill"
+                                            onclick="bayar({{ $itemharga->harga }}, {{ $event->id }}, '{{ addslashes($itemharga->nama_harga) }}')">Pesan</button>
+                                    @else
+                                        <!-- Belum login -->
+                                        <a href="{{ route('login') }}"
+                                            class="btn-card text-center btn-primary rounded-pill">
+                                            Pesan
+                                        </a>
+                                    @endauth
+                                @endif
 
 
                             </div>
