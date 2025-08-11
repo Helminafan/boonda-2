@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use App\Models\HargaEvent;
+use App\Models\Image;
 use App\Models\Pemesanan;
 use App\Models\Review;
 use App\Models\User;
@@ -11,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class KolaboratorController extends Controller
 {
@@ -193,4 +195,108 @@ class KolaboratorController extends Controller
         $event->delete();
         return redirect()->route('kolaborator.event.view')->with('success', 'Event deleted successfully.');
     }
+
+
+     public function index_galery()
+    {
+        
+
+        $title = 'Delete Data!';
+        $text = "Apakah Kamu Yakin Akan Menghapus Data Ini?";
+        confirmDelete($title, $text);
+        $data = Image::all();
+        return view('kolaborator.gambar.index', compact('data'));
+    }
+    public function create_galery()
+    {
+        return view('kolaborator.gambar.create');
+    }
+    public function store_galery(Request $request)
+    {
+
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'tahun' => 'required|string|max:255',
+            'deskripsi' => 'required|string',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+       
+
+        $data = new Image();
+        if ($request->hasFile('foto')) {
+            $foto = $request->file('foto')->store('foto');
+            $data->foto = $foto;
+        } else {
+            $data->foto = 'default.jpg'; 
+        }
+        $data->deskripsi = $request->deskripsi;
+        $data->tahun = $request->tahun;
+        $data->nama = $request->nama;
+        $data->save();
+    
+        Alert::success('Success', 'Tambah data Berhasil!')->showConfirmButton('OK');
+        return redirect()->route('galery_kolaborator.index');
+    }
+     public function edit_galery(string $id)
+    {
+        $editData = Image::find($id);
+        return view('kolaborator.gambar.edit', compact('editData'));
+    }
+
+    public function update_galery(Request $request, string $id)
+    {
+        $data = Image::find($id);
+    
+        if (!$data) {
+            return redirect()->back()->withErrors('Data tidak ditemukan.');
+        }
+    
+        // Validasi data yang diterima
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'tahun' => 'required|string|max:255',
+            'deskripsi' => 'required|string',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+        
+    
+        // Hapus judul karena tidak ada di model
+        // $data->judul = $request->judul;
+    
+        if ($request->hasFile('foto')) {
+            if ($data->foto && $data->foto != 'default.jpg') {
+                Storage::delete($data->foto);
+            }
+            $foto = $request->file('foto')->store('foto');
+            $data->foto = $foto;
+        }
+    
+        $data->deskripsi = $request->deskripsi;
+        $data->nama = $request->nama;
+        $data->tahun = $request->tahun;
+    
+        $data->save();
+    
+        return redirect()->route('galery_kolaborator.index')->with('success', 'Image updated successfully.');
+    }    
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy_galery(string $id)
+    {
+        $data = Image::find($id);
+    
+        if (!$data) {
+            return redirect()->route('galery_kolaborator.index')->withErrors('Data tidak ditemukan.');
+        }
+    
+        if ($data->foto && $data->foto != 'default.jpg') {
+            Storage::delete($data->foto);
+        }
+    
+        $data->delete();
+    
+        return redirect()->route('galery_kolaborator.index')->with('success', 'Data berhasil dihapus.');
+    } 
 }

@@ -8,9 +8,12 @@ use App\Models\Image;
 use App\Models\Pemesanan;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use RealRashid\SweetAlert\Facades\Alert ;
 
 class UserController extends Controller
 {
@@ -106,6 +109,7 @@ class UserController extends Controller
 
         return view('user.galleri', compact('years', 'images', 'selectedYear', 'years2'));
     }
+
     public function review($id)
     {
         $event = Event::find($id);
@@ -113,11 +117,67 @@ class UserController extends Controller
     }
 
 
-    public function katalog()
+    public function katalog(Request $request)
     {
-        return view('user.katalog');
+
+        $query = DB::table('events');
+         $kolaboratoruser = User::where('role','kolaborator')->get();
+        $kota = Event::all();
+
+        // Filter Kota
+        if ($request->filled('kota')) {
+            $query->where('kota', $request->kota);
+        }
+
+        // Filter Kolaborator
+        if ($request->filled('kolaborator_id')) {
+            $query->where('kolaborator_id', $request->kolaborator_id);
+        }
+
+        // Filter Fasilitas
+        if ($request->filled('fasilitas')) {
+            $query->where('fasilitas', $request->fasilitas);
+        }
+
+        // Filter Status
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        // Filter Rating
+        if ($request->filled('rating')) {
+            $query->where('rating', $request->rating);
+        }
+
+        // Ambil hasil akhir (limit 9)
+        $events = $query->orderBy('created_at', 'desc')->get();
+        return view('user.katalog', compact('events','kota','kolaboratoruser'));
     }
 
+    public function profilUser($id)  {
+        $user = User::find($id);
+        return view('user.profileusser', compact('user'));
+    }
+    public function updateUser(Request $request, $id)
+    {
+        // Validate and update kolaborator data
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required',
+            'alamat' => 'required',
+            'no_telp' => 'nullable|string|max:15',
+        ]);
+        $user = User::findOrFail($id);
+        $user->name = $request->name;
+        $user->email = $request->email;
+       
+        $user->alamat = $request->alamat;
+        $user->no_telp = $request->no_telp;
+        
+        $user->save();
+
+        return redirect()->route('user.profiluser', $id)->with('success', 'User updated successfully.');
+    }
 
     public function kolaborator($id)
     {
@@ -208,4 +268,5 @@ class UserController extends Controller
         $pdf = Pdf::loadView('user.tiket', compact('tiket', 'kode_tiket'));
         return $pdf->stream('tiket.pdf');
     }
+      
 }

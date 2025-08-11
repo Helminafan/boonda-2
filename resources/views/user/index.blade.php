@@ -134,73 +134,82 @@
             <h6 class="custom-titlegal mt-3">Event</h6>
 
             <!-- Buttons and Dropdown Section -->
-            <div class="mb-4 d-flex justify-content-between flex-wrap">
-                <!-- Dropdown Kota -->
-                <div class="dropdown flex-fill mx-1">
-                    <button class="btn btn-katalog btn-sm rounded-pill dropdown-toggle w-100" type="button"
-                        id="dropdownTempat" data-toggle="dropdown" aria-expanded="false">
-                        Kota
-                    </button>
-                    <ul class="dropdown-menu w-100 " aria-labelledby="dropdownTempat">
-                        @foreach ($kota->unique('kota') as $item)
-                            <li><a class="dropdown-item"
-                                    href="{{ request()->fullUrlWithQuery(['kota' => $item->kota]) }}">{{ $item->kota }}</a>
-                            </li>
-                        @endforeach
+            @php
+                    $selectedKota = request()->query('kota');
+                    $selectedKolaborator = request()->query('kolaborator_id');
+                    $selectedFasilitas = request()->query('fasilitas');
+                    $selectedStatus = request()->query('status');
+                @endphp
 
-                    </ul>
-                </div>
-                <!-- Dropdown kolaborator -->
-                <div class="dropdown flex-fill mx-1">
-                    <button class="btn btn-katalog btn-sm rounded-pill dropdown-toggle w-100" type="button"
-                        id="dropdownTempat" data-toggle="dropdown" aria-expanded="false">
-                        Kolaborator
-                    </button>
-                    <ul class="dropdown-menu w-100 " aria-labelledby="dropdownTempat">
-                        @foreach ($kolaboratoruser as $item)
-                            <li><a class="dropdown-item"
-                                    href="{{ request()->fullUrlWithQuery(['kolaborator_id' => $item->id]) }}">{{ $item->name }}</a>
-                            </li>
-                        @endforeach
-
-                    </ul>
-                </div>
-                <!-- Dropdown fasilitas -->
-                <div class="dropdown flex-fill mx-1">
-                    <button class="btn btn-katalog btn-sm rounded-pill dropdown-toggle w-100" type="button"
-                        id="dropdownTempat" data-toggle="dropdown" aria-expanded="false">
-                        fasilitas
-                    </button>
-                    <ul class="dropdown-menu w-100 " aria-labelledby="dropdownTempat">
-                        <li><a class="dropdown-item" href="{{ request()->fullUrlWithQuery(['fasilitas' => 'sertifikat']) }}">Sertifikat</a></li>
-                        <li><a class="dropdown-item" href="{{ request()->fullUrlWithQuery(['fasilitas' => 'non sertifikat']) }}">Non Sertifikat</a></li>
-                    </ul>
-                </div>
-                <!-- Dropdown Status -->
-                <div class="dropdown flex-fill mx-1">
-                    <button class="btn btn-katalog btn-sm rounded-pill dropdown-toggle w-100" type="button"
-                        id="dropdownTempat" data-toggle="dropdown" aria-expanded="false">
-                        Status
-                    </button>
-                    <ul class="dropdown-menu w-100" aria-labelledby="dropdownTempat">
-                        <li><a class="dropdown-item"
-                                href="{{ request()->fullUrlWithQuery(['status' => 'online']) }}">Online</a></li>
-                        <li><a class="dropdown-item"
-                                href="{{ request()->fullUrlWithQuery(['status' => 'offline']) }}">Offline</a></li>
-                    </ul>
-                </div>
-
-
-                <!-- Dropdown rating-->
-                @if (request()->anyFilled(['kota', 'status', 'rating', 'kolaborator', 'fasilitas']))
-                    <div class=" flex-fill mx-1">
-
-
-                        <a href="{{ route('user.index') }}" class="btn btn-danger btn-sm rounded-pill w-100">Reset
-                            Filter</a>
+                <div class="mb-4 d-flex justify-content-between flex-wrap">
+                    <!-- Dropdown Kota -->
+                    <div class="dropdown flex-fill mx-1">
+                        <button class="btn btn-katalog btn-sm rounded-pill dropdown-toggle w-100" type="button"
+                            id="dropdownTempat" data-toggle="dropdown" aria-expanded="false">
+                            {{ $selectedKota ?? 'Kota' }}
+                        </button>
+                        <ul class="dropdown-menu w-100" aria-labelledby="dropdownTempat">
+                            @foreach ($kota->unique('kota') as $item)
+                                <li><a class="dropdown-item"
+                                        href="{{ request()->fullUrlWithQuery(['kota' => $item->kota]) }}">{{ $item->kota }}</a>
+                                </li>
+                            @endforeach
+                        </ul>
                     </div>
-                @endif
-            </div>
+
+                    <!-- Dropdown Kolaborator -->
+                    <div class="dropdown flex-fill mx-1">
+                        <button class="btn btn-katalog btn-sm rounded-pill dropdown-toggle w-100" type="button"
+                            id="dropdownTempat" data-toggle="dropdown" aria-expanded="false">
+                            {{ $kolaboratoruser->firstWhere('id', $selectedKolaborator)?->name ?? 'Kolaborator' }}
+                        </button>
+                        <ul class="dropdown-menu w-100" aria-labelledby="dropdownTempat">
+                            @foreach ($kolaboratoruser as $item)
+                                <li><a class="dropdown-item"
+                                        href="{{ request()->fullUrlWithQuery(['kolaborator_id' => $item->id]) }}">{{ $item->name }}</a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+
+                    <!-- Dropdown Fasilitas -->
+                    <div class="dropdown flex-fill mx-1">
+                        <button class="btn btn-katalog btn-sm rounded-pill dropdown-toggle w-100" type="button"
+                            id="dropdownTempat" data-toggle="dropdown" aria-expanded="false">
+                            {{ $selectedFasilitas ? ucfirst($selectedFasilitas) : 'Fasilitas' }}
+                        </button>
+                        <ul class="dropdown-menu w-100" aria-labelledby="dropdownTempat">
+                            <li><a class="dropdown-item"
+                                    href="{{ request()->fullUrlWithQuery(['fasilitas' => 'sertifikat']) }}">Sertifikat</a>
+                            </li>
+                            <li><a class="dropdown-item"
+                                    href="{{ request()->fullUrlWithQuery(['fasilitas' => 'non sertifikat']) }}">Non
+                                    Sertifikat</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Dropdown Status -->
+                    <div class="dropdown flex-fill mx-1">
+                        <button class="btn btn-katalog btn-sm rounded-pill dropdown-toggle w-100" type="button"
+                            id="dropdownTempat" data-toggle="dropdown" aria-expanded="false">
+                            {{ $selectedStatus ? ucfirst($selectedStatus) : 'Status' }}
+                        </button>
+                        <ul class="dropdown-menu w-100" aria-labelledby="dropdownTempat">
+                            <li><a class="dropdown-item"
+                                    href="{{ request()->fullUrlWithQuery(['status' => 'online']) }}">Online</a></li>
+                            <li><a class="dropdown-item"
+                                    href="{{ request()->fullUrlWithQuery(['status' => 'offline']) }}">Offline</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Reset Filter -->
+                    @if (request()->anyFilled(['kota', 'status', 'rating', 'kolaborator_id', 'fasilitas']))
+                        <div class="flex-fill mx-1">
+                            <a href="{{ route('user.index') }}"
+                                class="btn btn-danger btn-sm rounded-pill w-100">Reset Filter</a>
+                        </div>
+                    @endif
+                </div>
 
             <div class="row text-left">
                 <!-- Card 1 -->

@@ -48,7 +48,7 @@
             Jangan Ragu untuk Bertanya!
         </p>
         <hr class="separator">
-        <a href="https://wa.me/6281276001730" target="_blank" class="btn-btn-whatsapp rounded">
+        <a href="https://wa.me/62812343747107" target="_blank" class="btn-btn-whatsapp rounded">
             CS Pendaftaran
             </a>
     </div>

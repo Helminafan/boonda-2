@@ -46,6 +46,7 @@
             </div>
         </div>
     </nav>
+    @include('sweetalert::alert')
     <div class=" container-fluid mt-5 pt-5 ">
         <div class="text-left mb-2">
             <a href="javascript:history.back()" class="btn rounded">
@@ -53,22 +54,38 @@
             </a>
         </div>
         <section id="kolaborator">
-            <div class="col text-center">
-                <h5 class="card-title custom-titlefax mb-3">Edit Profile</h5>
-                <div class="row d-flex flex-column align-items-center">
-                    <div class="col d-flex justify-content-center">
-                        <img src="{{ asset('storage/' . $kolaborator->profile_photo_path) }}" alt="Collaborator Profile"
-                            class="card-img" style="width: 150px; height:150px; border-radius: 20px;">
+            <div class="col ">
+                <h5 class="card-title custom-titlefax mb-3 text-center">Edit Profile</h5>
+                <div class="container  mb-5 ">
+                    <div class="card">
+                        <form method="POST" action="{{route('user.updateprofile', $user->id)}}">
+                            @csrf
+                            <div class="row p-5">
+                                <div class=" mb-3 col-6">
+                                    <label for="exampleInputEmail1" class="form-label">Nama</label>
+                                    <input type="text" name="name" value="{{$user->name}}" class="form-control">
+                                </div>
+                                <div class=" mb-3 col-6">
+                                    <label for="exampleInputEmail1" class="form-label">Email</label>
+                                    <input type="email"  name="email" value="{{$user->email}}" class="form-control">
+                                </div>
+                                <div class=" mb-3 col-6">
+                                    <label for="exampleInputEmail1" class="form-label">No Telp</label>
+                                    <input type="text" name="no_telp" value="{{$user->no_telp}}" class="form-control">
+                                </div>
+                                <div class=" mb-3 col-6">
+                                    <label for="exampleInputEmail1" class="form-label">Alamat</label>
+                                    <input type="text" name="alamat" value="{{$user->alamat}}" class="form-control">
+                                </div>
+                              
+                                <button class=" mt-3 col btn btn-primary"> Edit</button>
+                        </form>
                     </div>
-                    <div class="item-details">
-                        <p><strong style="color:rgba(255, 106, 138, 1); ">{{ $kolaborator->name }}</strong> </p>
-                        <p>{{ $kolaborator->deskripsi }}</p>
-                    </div>
-
                 </div>
             </div>
         </section>
-       
+
+
     </div>
     <footer class="custom-footer">
         <div class="footer-container">
@@ -159,7 +176,7 @@
 
     <!-- Bootstrap 5.1.3 JS (Tanpa jQuery) -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
-    
+
 </body>
 
 </html>

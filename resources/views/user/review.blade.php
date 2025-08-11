@@ -103,7 +103,7 @@
                 <br>
                 Jangan Ragu untuk Bertanya!
             </p>
-            <a href="https://wa.me/6281276001730" target="_blank"class="btn-btn-whatsapp">
+            <a href="https://wa.me/62812343747107" target="_blank"class="btn-btn-whatsapp">
                 <img src="{{ asset('user/imgs/whatsapp.png') }}" alt="CS Pendaftaran" class="btn-icon"> CS Pendaftaran
             </a>
             <a href="https://wa.me/6281234474107" target="_blank"class="btn-btn-whatsapp">
@@ -167,7 +167,7 @@
                 </form>
             </div>
         </div>
-        </div>
+       
 
     </section>
 

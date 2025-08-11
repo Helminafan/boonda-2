@@ -10,6 +10,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use PHPUnit\Framework\Attributes\Group;
+use Dompdf\Dompdf;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,9 +63,9 @@ Route::middleware([
         Route::get('/kolaborator_edit/{id}', [AdminController::class, 'editKolaborator'])->name('kolaborator.edit');
         Route::post('/kolaborator_update/{id}', [AdminController::class, 'updateKolaborator'])->name('kolaborator.update');
         Route::delete('/kolaboratordelete/{id}', [AdminController::class, 'destroyKolaborator'])->name('kolaborator.delete');
-        Route::get('/kolaborator_ulasan/{id}',[AdminController::class,'ulasanKolaborator'])->name('kolaborator.ulasan.admin');
-        Route::post('/kolaborator_ulasan_create/{id}',[AdminController::class,'aktifUlasan'])->name('kolaborator.ulasan.aktif');
-        Route::delete('/kolaborator_ulasan_delete/{id}',[ReviewController::class,'destroy'])->name('kolaborator.ulasan_hapus');
+        Route::get('/kolaborator_ulasan/{id}', [AdminController::class, 'ulasanKolaborator'])->name('kolaborator.ulasan.admin');
+        Route::post('/kolaborator_ulasan_create/{id}', [AdminController::class, 'aktifUlasan'])->name('kolaborator.ulasan.aktif');
+        Route::delete('/kolaborator_ulasan_delete/{id}', [ReviewController::class, 'destroy'])->name('kolaborator.ulasan_hapus');
     });
 
     Route::group(['prefix' => 'event'], function () {
@@ -76,8 +77,8 @@ Route::middleware([
         Route::get('/event_peserta/{id}', [EventController::class, 'peserta'])->name('event.peserta');
         Route::post('/event_update/{id}', [EventController::class, 'update'])->name('event.update');
         Route::delete('/eventdelete/{id}', [EventController::class, 'destroy'])->name('event.delete');
-        Route::post('/store_harga/{id}', [EventController::class, 'storeHargaEvent'])->name('harga.store'); 
-        Route::post('/iklan_event/{id}', [EventController::class, 'aktifIklan'])->name('iklan.aktif'); 
+        Route::post('/store_harga/{id}', [EventController::class, 'storeHargaEvent'])->name('harga.store');
+        Route::post('/iklan_event/{id}', [EventController::class, 'aktifIklan'])->name('iklan.aktif');
     });
 
     Route::group(['prefix' => 'pelanggan'], function () {
@@ -90,6 +91,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'role:user'
     Route::get('kelasku', [UserController::class, 'kelasku_view'])->name('kelasku.view');
     Route::get('/cetak-tiket/{id}', [UserController::class, 'cetak'])->name('cetak.tiket');
     Route::get('/review/{id}', [UserController::class, 'review'])->name('user.review');
+    Route::get('/profilUser/{id}', [UserController::class, 'profilUser'])->name('user.profiluser');
+    Route::post('/profiluserupdate/{id}', [UserController::class, 'updateUser'])->name('user.updateprofile');
     Route::post('/review_store/{id}', [ReviewController::class, 'store'])->name('user_review.store');
 });
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'role:kolaborator', 'verified'])->group(function () {
@@ -104,9 +107,13 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'role:kolab
         Route::get('/event/view', [KolaboratorController::class, 'eventkolaborator'])->name('kolaborator.event.view');
         Route::get('/event/show/{id}', [KolaboratorController::class, 'show'])->name('kolaborator.event.show');
         Route::get('/event/peserta/{id}', [KolaboratorController::class, 'peserta'])->name('kolaborator.event.peserta');
-        Route::get('/ulasan/view', [KolaboratorController::class, 'ulasanKolabor'])->name('kolaborator.ulasan.view');
-        Route::post('/ulasan/aktif/{id}',[KolaboratorController::class,'aktifUlasan'])->name('create.ulasan.aktif');
-        Route::delete('/ulasan/destroy/{id}',[ReviewController::class,'destroyUlasan'])->name('detroy.ulasan_hapus');
+
+        Route::get('/galery/index', [KolaboratorController::class, 'index_galery'])->name('galery_kolaborator.index');
+        Route::get('/galery/add', [KolaboratorController::class, 'create_galery'])->name('galery_kolaborator.create');
+        Route::post('/galery/store', [KolaboratorController::class, 'store_galery'])->name('galery_kolaborator.store');
+        Route::get('/galery/edit/{id}', [KolaboratorController::class, 'edit_galery'])->name('galery_kolaborator.edit');
+        Route::post('/galery/update/{id}', [KolaboratorController::class, 'update_galery'])->name('galery_kolaborator.update');
+        Route::delete('/galery/delete/{id}', [KolaboratorController::class, 'destroy_galery'])->name('galery_kolaborator.delete');
     });
 });
 Route::get('/auth/logout', [AuthController::class, 'logout'])->name('admin.logout');

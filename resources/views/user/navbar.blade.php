@@ -30,8 +30,14 @@
                 @auth
                     <li class="nav-item">
                         <a class="nav-link text-white btn-primary rounded-pill d-flex align-items-center"
-                            href="{{ Route('admin.logout') }}">
+                            href="{{route('user.profiluser', Auth::user()->id)}}">
                             {{Auth::user()->name}}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white btn-primary rounded-pill d-flex align-items-center"
+                            href="{{ Route('admin.logout') }}">
+                            Logout
                         </a>
                     </li>
                 @else

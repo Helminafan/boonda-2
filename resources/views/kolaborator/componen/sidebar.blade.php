@@ -45,10 +45,10 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="{{route('kolaborator.ulasan.view')}}" class="nav-link {{ request()->is('kolaborator/ulasan/*') ? 'active' : '' }}">
+            <a href="{{route('galery_kolaborator.index')}}" class="nav-link {{ request()->is('kolaborator/galery/*') ? 'active' : '' }}">
               <i class="fas fa-comment-dots"></i>
               <p>
-                Ulasan
+                Galery
               </p>
             </a>
           </li>

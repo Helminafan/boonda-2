@@ -11,17 +11,18 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1>Event</h1>
+                        <h1>Galery</h1>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">event</li>
+                            <li class="breadcrumb-item active">Galery</li>
                         </ol>
                     </div>
                 </div>
-            </div>
+            </div><!-- /.container-fluid -->
         </section>
+
         <!-- Main content -->
         <section class="content">
             <div class="container-fluid">
@@ -31,14 +32,12 @@
                             <div class="card-header">
                                 <div class="row">
                                     <div class="col">
-                                        <h3 class="card-title">DataTable event</h3>
+                                        <h3 class="card-title">DataTable Galery</h3>
                                     </div>
-                                     <div class="col">
-                                        <a href="{{ route('kolaborator.event.add') }}" class="btn btn-primary float-right">Add
-                                            New
-                                            event</a>
+                                    <div class="col">
+                                        <a href="{{ route('galery_kolaborator.create') }}" class="btn btn-primary float-right">Add New
+                                            Image</a>
                                     </div>
-                                  
                                 </div>
                             </div>
                             <!-- /.card-header -->
@@ -46,25 +45,20 @@
                                 <table id="example2" class="table table-bordered table-hover">
                                     <thead>
                                         <tr>
-                                            <th>Foto Event</th>
-                                            <th>Nama Event</th>
-                                            <th>Kolaborator</th>
-                                            <th>Tanggal</th>
-                                            <th>Waktu</th>
-                                            <th>Kuota</th>
-                                            <th>Aksi</th>
+                                            <th>Foto</th>
+                                            <th>Nama</th>
+                                            <th>Tahun</th>
+                                            <th>Deskripsi</th>
+                                            <th>AKsi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($events as $item)
+                                        @foreach ($data as $item)
                                             <tr>
-                                                <td><img src="{{ asset('storage/' . $item->gambar) }} "
-                                                        alt="foto"style="width: 50px; height: 50px;"></td>
-                                                <td>{{ $item->nama_event }}</td>
-                                                <td>{{ $item->kolaborator->name }}</td>
-                                                <td>{{ $item->tanggal }}</td>
-                                                <td>{{ $item->waktu_mulai }}</td>
-                                                <td>{{ $item->kuota }}</td>
+                                                <td><img src="{{asset('storage/'.$item->foto)}}" alt="" style="height: 50px; width: 50px;"></td>
+                                                <td>{{$item->nama}}</td>
+                                                <td>{{$item->tahun}}</td>
+                                                <td> {{$item->deskripsi}}</td>
                                                 <td class="text-center">
                                                     <div class="btn-group">
                                                         <button type="button" class="btn btn-info">Action</button>
@@ -74,26 +68,24 @@
                                                             <span class="sr-only">Toggle Dropdown</span>
                                                         </button>
                                                         <div class="dropdown-menu" role="menu">
-                                                            <a href="{{ route('kolaborator.event.show', $item->id) }}"
-                                                                class="dropdown-item">View</a>
-                                                            <a href="{{ route('kolaborator.event.edit', $item->id) }}"
+                                                            <a href="{{ route('galery_kolaborator.edit', $item->id) }}"
                                                                 class="dropdown-item">Edit</a>
-                                                            <a href="{{ route('kolaborator.event.peserta', $item->id) }}"
-                                                                class="dropdown-item">Peserta</a>
-                                                            <a href="{{ route('kolaborator.event.delete', $item->id) }}"
-                                                                class="dropdown-item">Hapus</a>
-                                                           
+                                                            <a class="dropdown-item"
+                                                                href="{{ route('galery_kolaborator.delete', $item->id) }} "
+                                                                data-confirm-delete="true">Hapus</a>
                                                         </div>
                                                     </div>
                                                 </td>
                                             </tr>
                                         @endforeach
-
-
                                 </table>
                             </div>
                             <!-- /.card-body -->
                         </div>
+                        <!-- /.card -->
+
+
+                        <!-- /.card -->
                     </div>
                     <!-- /.col -->
                 </div>
