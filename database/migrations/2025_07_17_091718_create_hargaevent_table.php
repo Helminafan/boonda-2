@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('event_id')
                 ->constrained('events')
-                ->onDelete('cascade')
                 ->onUpdate('cascade');
             $table->integer('harga');
             $table->string('nama_harga');

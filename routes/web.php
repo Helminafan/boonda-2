@@ -28,6 +28,7 @@ Route::get('/detailcard/{id}', [UserController::class, 'detailcard'])->name('use
 Route::get('/galleri', [UserController::class, 'galleri'])->name('user.galleri');
 Route::get('/katalog', [UserController::class, 'katalog'])->name('user.katalog');
 Route::get('/kolabora/{id}', [UserController::class, 'kolaborator'])->name('user.kolaborator');
+Route::post('/password_forget', [AuthController::class, 'postForgetPassword'])->name('forgetpassword.store');
 
 
 Route::middleware([
@@ -88,12 +89,14 @@ Route::middleware([
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'role:user', 'verified'])->group(function () {
     Route::post('/pembayaranevent', [UserController::class, 'pembayaranevent'])->name('pembayaranevent');
     Route::post('/pemesanan', [UserController::class, 'pemesanan'])->name('pemesanan');
+    Route::get('/pesanan', [UserController::class, 'pesanan_view'])->name('pesanan.view');
     Route::get('kelasku', [UserController::class, 'kelasku_view'])->name('kelasku.view');
     Route::get('/cetak-tiket/{id}', [UserController::class, 'cetak'])->name('cetak.tiket');
     Route::get('/review/{id}', [UserController::class, 'review'])->name('user.review');
     Route::get('/profilUser/{id}', [UserController::class, 'profilUser'])->name('user.profiluser');
     Route::post('/profiluserupdate/{id}', [UserController::class, 'updateUser'])->name('user.updateprofile');
     Route::post('/review_store/{id}', [ReviewController::class, 'store'])->name('user_review.store');
+    Route::post('/pesanan_update', [UserController::class, 'pesanan_update'])->name('pesanan_update');
 });
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'role:kolaborator', 'verified'])->group(function () {
     Route::group(['prefix' => 'kolaborator'], function () {

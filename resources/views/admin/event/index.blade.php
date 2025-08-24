@@ -60,7 +60,11 @@
                                                 <td><img src="{{ asset('storage/' . $item->gambar) }} "
                                                         alt="foto"style="width: 50px; height: 50px;"></td>
                                                 <td>{{ $item->nama_event }}</td>
-                                                <td>{{ $item->kolaborator->name }}</td>
+                                                <td>
+                                                    @if (!$item->kolaborator == null)
+                                                        {{ $item->kolaborator->name }}
+                                                    @endif
+                                                </td>
                                                 <td>{{ $item->tanggal }}</td>
                                                 <td>{{ $item->waktu_mulai }}</td>
                                                 <td>
@@ -68,7 +72,7 @@
                                                         @if ($item->keterangan == 'tidak_aktif')
                                                             <form method="POST"
                                                                 action="{{ route('iklan.aktif', $item->id) }}">
-                                                                @csrf 
+                                                                @csrf
                                                                 <button class="btn btn-success">Aktif</button>
                                                             </form>
                                                         @endif

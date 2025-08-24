@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::table('pemesanans', function (Blueprint $table) {
             $table->integer('harga');
             $table->string('jenis_tiket');
+            $table->integer('jumlah')->default(1);
         });
     }
 

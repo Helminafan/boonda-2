@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('kolaborator_id')
                 ->constrained('users')
-                ->onDelete('cascade')
                 ->onUpdate('cascade');
             $table->string('nama_event');
             $table->text('deskripsi_event');

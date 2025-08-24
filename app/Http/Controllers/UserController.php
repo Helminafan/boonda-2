@@ -228,9 +228,10 @@ class UserController extends Controller
             if ($event->kuota <= 0) {
                 return redirect()->back()->with('error', 'Kuota tiket telah habis.');
             }
+            $jumlah_tiket = $request->jumlah;
 
             // Kurangi kuota
-            $event->kuota -= 1;
+            $event->kuota -= $jumlah_tiket;
             $event->save();
 
             // Simpan pemesanan
@@ -239,17 +240,25 @@ class UserController extends Controller
             $pemesanan->id_event = $request->id_event;
             $pemesanan->harga = $request->harga;
             $pemesanan->jenis_tiket = $request->jenis_tiket;
-            $pemesanan->status = 'sudah_bayar';
+            $pemesanan->jumlah = $jumlah_tiket;
+            $pemesanan->status = 'belum_bayar';
             $pemesanan->save();
 
             DB::commit(); // Commit jika tidak error
 
-            return redirect()->route('user.index')->with('success', 'Pemesanan berhasil.');
+            return redirect()->route('pesanan.view')->with('success', 'Pemesanan berhasil.');
         } catch (\Exception $e) {
             DB::rollBack(); // Rollback jika terjadi error
 
             return redirect()->back()->with('error', 'Terjadi kesalahan saat memesan: ' . $e->getMessage());
         }
+    }
+    public function pesanan_update(Request $request){
+        $idtiket = $request->id_tiket;
+        $pemesanan = Pemesanan::where('id', $idtiket)->first();
+        $pemesanan->status = 'sudah_bayar';
+        $pemesanan->save();
+        return redirect()->route('pesanan.view')->with('success', 'Pembayaran Berhasil');
     }
 
     public function kelasku_view()
@@ -257,6 +266,11 @@ class UserController extends Controller
 
         $data = Pemesanan::where('id_user', Auth::user()->id)->get();
         return view('user.kelasku', compact('data'));
+    }
+    public function pesanan_view()
+    {
+        $data = Pemesanan::where('id_user', Auth::user()->id)->orderby('created_at', 'desc')->get();
+        return view('user.pesanan', compact('data'));
     }
 
     public function cetak($id)

@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('pemesanans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_user')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreignId('id_event')->constrained('events')->onDelete('cascade')->onUpdate('cascade');
-            $table->enum('status',['sudah_bayar','belum_bayar']);
+            $table->foreignId('id_user')->constrained('users')->onUpdate('cascade');
+            $table->foreignId('id_event')->constrained('events')->onUpdate('cascade');
+            $table->enum('status',['sudah_bayar','belum_bayar'])->default('belum_bayar');
             $table->timestamps();
         });
     }

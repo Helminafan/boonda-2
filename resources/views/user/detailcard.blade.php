@@ -43,9 +43,7 @@
                     <li class="nav-item">
                         <a class="nav-link text-white" href="{{ url('/') }}#home">Home</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="#Pay">Pembayaran</a>
-                    </li>
+
                     <li class="nav-item">
                         <a class="nav-link text-white" href="#rekomendasi">Rekomendasi</a>
                     </li>
@@ -224,69 +222,94 @@
                 </div>
             @endif
         </div>
-        </div>
-        @if ($pemesanan->isEmpty())
-            <section id="Pay" class="section ">
-                <div class="container-detailcard mt-5">
-                    <div class="title">Daftar Harga</div>
-                    <div class="grid">
-                        <div class="itemdetail">
-                            <div class="item-text">
-                                <p>Early Bird</p>
-                                <div class="item-price">
-                                    <p>Rp {{ number_format($event->harga, 0, ',', '.') }}</p>
-
-                                </div>
-
-                            </div>
-                            @if ($event->kuota > 0)
-                                @auth
-                                    <!-- Sudah login -->
-                                    <button class="btn-card btn-primary rounded-pill"
-                                        onclick="bayar({{ $event->harga }}, {{ $event->id }}, '{{ addslashes('Early Bird') }}')">
-                                        Pesan
-                                    </button>
-                                @else
-                                    <!-- Belum login -->
-                                    <a href="{{ route('login') }}" class="btn-card text-center btn-primary rounded-pill">
-                                        Pesan
-                                    </a>
-                                @endauth
-                            @endif
-
-
+    </section>
+    <section id="Pay" class="section ">
+        <div class="container-detailcard mt-5">
+            <div class="title">Daftar Harga</div>
+            <div class="grid">
+                
+                <div class="itemdetail">
+                    <div class="item-text">
+                        <p>Early Bird</p>
+                        <div class="item-price">
+                            <p>Rp {{ number_format($event->harga, 0, ',', '.') }}</p>
 
                         </div>
 
-                        @foreach ($hargaevent as $itemharga)
-                            <div class="itemdetail">
-                                <div class="item-text">
-                                    <p>{{ $itemharga->nama_harga }}</p>
-                                    <div class="item-price">
-                                        <p>Rp. {{ number_format($itemharga->harga, 0, ',', '.') }}</p>
-                                    </div>
-                                </div>
-                                @if ($event->kuota > 0)
-                                    @auth
-
-                                        <button class="btn-card btn-primary rounded-pill"
-                                            onclick="bayar({{ $itemharga->harga }}, {{ $event->id }}, '{{ addslashes($itemharga->nama_harga) }}')">Pesan</button>
-                                    @else
-                                        <!-- Belum login -->
-                                        <a href="{{ route('login') }}"
-                                            class="btn-card text-center btn-primary rounded-pill">
-                                            Pesan
-                                        </a>
-                                    @endauth
-                                @endif
-
-
+                    </div>
+                    @if ($event->kuota > 0)
+                        @auth
+                            <button class="btn-card btn-primary rounded-pill"
+                                onclick="openPesanModal({{ $event->harga }}, {{ $event->id }}, 'Early Bird')">
+                                Pesan
+                            </button>
+                        @else
+                            <a href="{{ route('login') }}" class="btn-card text-center btn-primary rounded-pill">
+                                Pesan
+                            </a>
+                        @endauth
+                    @endif
+                </div>
+                @foreach ($hargaevent as $itemharga)
+                    <div class="itemdetail">
+                        <div class="item-text">
+                            <p>{{ $itemharga->nama_harga }}</p>
+                            <div class="item-price">
+                                <p>Rp. {{ number_format($itemharga->harga, 0, ',', '.') }}</p>
                             </div>
-                        @endforeach
+                        </div>
+                        @if ($event->kuota > 0)
+                            @auth
+                                <button class="btn-card btn-primary rounded-pill"
+                                    onclick="openPesanModal({{ $itemharga->harga }}, {{ $event->id }}, '{{ addslashes($itemharga->nama_harga) }}')">
+                                    Pesan
+                                </button>
+                            @else
+                                <a href="{{ route('login') }}" class="btn-card text-center btn-primary rounded-pill">
+                                    Pesan
+                                </a>
+                            @endauth
+                        @endif
+                    </div>
+                @endforeach
+
+
+                <!-- Modal Pesan Tiket (hanya 1x saja) -->
+                <div class="modal fade" id="pesanModal" tabindex="-1" aria-labelledby="pesanModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form method="POST" action="{{ route('pemesanan') }}">
+                                @csrf
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="pesanModalLabel">Pesan Tiket</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <label>Jumlah Tiket</label>
+                                    <input type="number" class="form-control" name="jumlah" value="1"
+                                        min="1"> <br>
+
+                                    <!-- input hidden untuk dikirim -->
+                                    <input type="hidden" name="id_event" id="modalEventId">
+                                    <input type="hidden" name="harga" id="modalHarga">
+                                    <input type="hidden" name="jenis_tiket" id="modalJenis">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Batal</button>
+                                    <button type="submit" class="btn btn-primary">Masukkan Ke
+                                        Pesanan</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </section>
-        @endif
+            </div>
+        </div>
+    </section>
+
 
     </section>
     <footer class="custom-footer">
@@ -371,78 +394,22 @@
         </div>
     </footer>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+</script>
+
 <script>
-    function bayar(harga, id_event = null, jenis_tiket = null) {
-        fetch("{{ route('pembayaranevent') }}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                },
-                body: JSON.stringify({
-                    harga
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.token) {
-                    snap.pay(data.token, {
-                        onSuccess: function(result) {
-                            alert("Pembayaran berhasil!");
-                            sendResponForm(id_event, harga, jenis_tiket);
-                        },
-                        onPending: function(result) {
-                            alert("Menunggu pembayaran.");
-                        },
-                        onError: function(result) {
-                            alert("Pembayaran gagal.");
-                        },
-                        onClose: function() {
-                            alert("Anda menutup popup pembayaran.");
-                        }
-                    });
-                } else {
-                    alert("Gagal mendapatkan token pembayaran.");
-                }
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                alert("Terjadi kesalahan saat memproses pembayaran.");
-            });
-    }
+    function openPesanModal(harga, id_event, jenis_tiket) {
+        // set value input hidden
+        document.getElementById('modalHarga').value = harga;
+        document.getElementById('modalEventId').value = id_event;
+        document.getElementById('modalJenis').value = jenis_tiket;
 
-    function sendResponForm(id_event, harga, jenis_tiket) {
-        let form = document.createElement('form');
-        form.method = 'POST';
-        form.action = "{{ route('pemesanan') }}";
-
-        let csrf = document.createElement('input');
-        csrf.type = 'hidden';
-        csrf.name = '_token';
-        csrf.value = "{{ csrf_token() }}";
-        form.appendChild(csrf);
-
-        let input1 = document.createElement('input');
-        input1.type = 'hidden';
-        input1.name = 'id_event';
-        input1.value = id_event;
-        form.appendChild(input1);
-
-        let input2 = document.createElement('input');
-        input2.type = 'hidden';
-        input2.name = 'harga';
-        input2.value = harga;
-        form.appendChild(input2);
-
-        let input3 = document.createElement('input');
-        input3.type = 'hidden';
-        input3.name = 'jenis_tiket';
-        input3.value = jenis_tiket;
-        form.appendChild(input3);
-
-        document.body.appendChild(form);
-        form.submit();
+        // tampilkan modal
+        var myModal = new bootstrap.Modal(document.getElementById('pesanModal'));
+        myModal.show();
     }
 </script>
+
 
 </html>

@@ -27,6 +27,9 @@
                 <li class="nav-item">
                    <a class="nav-link text-white" href="{{route('kelasku.view')}}">Kelasku</a>
                 </li>
+                <li class="nav-item">
+                   <a class="nav-link text-white" href="{{route('pesanan.view')}}">Pesanan</a>
+                </li>
                 @auth
                     <li class="nav-item">
                         <a class="nav-link text-white btn-primary rounded-pill d-flex align-items-center"

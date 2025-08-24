@@ -53,7 +53,7 @@
                         <a class="nav-link text-white" href="{{ route('kelasku.view') }}">Kelasku</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="{{route('pesanan.view')}}">Pesanan</a>
+                        <a class="nav-link text-white" href="{{ route('pesanan.view') }}">Pesanan</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white" href="javascript:history.back()"
@@ -62,8 +62,14 @@
                     @auth
                         <li class="nav-item">
                             <a class="nav-link text-white btn-primary rounded-pill d-flex align-items-center"
-                                href="{{ Route('admin.logout') }}">
+                                href="{{ route('user.profiluser', Auth::user()->id) }}">
                                 {{ Auth::user()->name }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white btn-primary rounded-pill d-flex align-items-center"
+                                href="{{ Route('admin.logout') }}">
+                                Logout
                             </a>
                         </li>
                     @else
@@ -143,35 +149,96 @@
 
     {{-- batas nav --}}
     <section id="pay">
-        @include('sweetalert::alert')
         <div class="container mt-5 mb-5 pt-5">
+            @foreach ($data as $item)
+                @php
+                    // hitung waktu expired = created_at + 15 menit
+                    $expireTime = \Carbon\Carbon::parse($item->created_at)->addMinutes(15)->timestamp * 1000;
+                @endphp
 
-            <h6 class="custom-titlegal mt-3 text-center">Review</h6>
-            <div class="card">
-                <form method="POST" action="{{route('user_review.store', $event->id)}}">
+                <div class="card my-2" id="card-{{ $item->id }}">
+                    <div class="row p-4 align-items-center">
+                        <div class="col-3">
+                            <div class="card border mb-4" style="border-radius: 20px;">
+                                <img src="{{ asset('storage/' . $item->event->gambar) }}" alt="Design for Everyone"
+                                    class="card-img-top w-100" style="border-radius: 20px;">
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="mb-2 p-2">
+                                <div class="title">{{ $item->event->nama_event }}</div>
+                                <div class="info">
+                                    <i class="bi-geo-alt"></i> {{ $item->event->lokasi }}<br>
+                                    <i class="bi-calendar"></i> {{ $item->event->tanggal }}<br>
+                                    <i class="bi-clock"></i> {{ $item->event->waktu_mulai }}
+                                </div>
+                                <div class="flex-fill text-primary">
+                                    Rp. {{ number_format($item->harga, 0, ',', '.') }} x {{ $item->jumlah }}
+                                    = Rp. {{ number_format($item->harga * $item->jumlah, 0, ',', '.') }}
+                                </div>
+                                <!-- Countdown tampil di sini -->
+                                @if ($item->status == 'belum_bayar')
+                                    <div class="text-danger fw-bold" id="timer-{{ $item->id }}"></div>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            @if ($item->status == 'sudah_bayar')
+                                <button class="btn btn-success">Sudah Bayar</button>
+                            @else
+                                <button onclick="bayar({{ $item->harga * $item->jumlah }}, {{ $item->id }})"
+                                    class="btn btn-danger">Belum bayar</button>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
+                <form action="{{ route('pesanan_update') }}" method="post" id="submitform-{{ $item->id }}">
                     @csrf
-                    <div class="row p-5">
-                        <div class=" mb-3 col-12">
-                            <label for="inputState" class="form-label">Bintang</label>
-                            <select name="bintang" id="inputState" class="form-control">
-                                <option value="" selected>Choose...</option>
-                                <option value="1">Bintang 1</option>
-                                <option value="2">Bintang 2</option>
-                                <option value="3">Bintang 3</option>
-                                <option value="4">Bintang 4</option>
-                                <option value="5">Bintang 5</option>
-                            </select>
-                        </div>
-                        <div class="mb-3 col-12">
-                            <label for="exampleInputEmail1" class="form-label">Isi Review</label>
-                            <textarea name="isi_review" class="form-control" id="" cols="30" rows="10"></textarea>
-                        </div>
-                        <button class=" mt-3 col btn btn-primary"> Tambah</button>
+                    <input type="hidden" name="id_tiket" value="{{ $item->id }}">
                 </form>
-            </div>
-        </div>
-       
 
+                <script>
+                    (function() {
+                        // Ambil status dari server
+                        const status = @json($item->status);
+
+                        // Ambil expireTime dari server (Carbon)
+                        const expireTime = {{ $expireTime }};
+
+                        const timerEl = document.getElementById("timer-{{ $item->id }}");
+                        const cardEl = document.getElementById("card-{{ $item->id }}");
+
+                        function updateCountdown() {
+                            const now = new Date().getTime();
+                            const distance = expireTime - now;
+
+                            if (status === "belum_bayar") {
+                                if (distance <= 0) {
+                                    cardEl.style.display = "none";
+                                    clearInterval(interval);
+                                } else {
+                                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                                    timerEl.innerHTML = "Sisa waktu bayar: " + minutes + "m " + seconds + "s ";
+                                }
+                            } else {
+                                timerEl.innerHTML = "Status: " + status;
+                            }
+                        }
+
+                        updateCountdown();
+                        const interval = setInterval(updateCountdown, 1000);
+                    })
+                    ();
+                </script>
+            @endforeach
+
+
+        </div>
+        </div>
     </section>
 
 
@@ -256,6 +323,51 @@
         </div>
         </div>
     </footer>
+    <script>
+        function bayar(harga, id) {
+            fetch("{{ route('pembayaranevent') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    },
+                    body: JSON.stringify({
+                        harga
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.token) {
+                        snap.pay(data.token, {
+                            onSuccess: function(result) {
+                                alert("Pembayaran berhasil!");
+                                sendResponForm(id);
+                            },
+                            onPending: function(result) {
+                                alert("Menunggu pembayaran.");
+                            },
+                            onError: function(result) {
+                                alert("Pembayaran gagal.");
+                            },
+                            onClose: function() {
+                                alert("Anda menutup popup pembayaran.");
+                            }
+                        });
+                    } else {
+                        alert("Gagal mendapatkan token pembayaran.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("Terjadi kesalahan saat memproses pembayaran.");
+                });
+
+        }
+
+        function sendResponForm(id) {
+            document.getElementById("submitform-" + id).submit();
+        }
+    </script>
 </body>
 
 

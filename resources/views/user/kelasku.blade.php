@@ -53,6 +53,9 @@
                         <a class="nav-link text-white" href="{{ route('kelasku.view') }}">Kelasku</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link text-white" href="{{route('pesanan.view')}}">Pesanan</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link text-white" href="javascript:history.back()"
                             class="btn btn-primary rounded">Kembali</a>
                     </li>
@@ -148,42 +151,44 @@
     <section id="pay">
         <div class="container mt-5 mb-5 pt-5">
             @foreach ($data as $item)
-                <div class="card my-2">
+                @if ($item->status == 'sudah_bayar')
+                    <div class="card my-2">
+                        <div class="row p-4 align-items-center">
 
-                    <div class="row p-4 align-items-center">
+                            <div class="col-3">
+                                <div class="card border mb-4" style="border-radius: 20px;">
 
-                        <div class="col-3">
-                            <div class="card border mb-4" style="border-radius: 20px;">
-
-                                <img src="{{ asset('storage/' . $item->event->gambar) }}" alt="Design for Everyone"
-                                    class="card-img-top w-100" style="border-radius: 20px;">
-                            </div>
-                        </div>
-                        <!-- Content Column -->
-                        <div class="col-6">
-                            <div class="mb-2 p-2">
-                                <div class="title">{{ $item->event->nama_event }}</div>
-                                <div class="info">
-                                    <i class="bi-geo-alt"></i> {{ $item->event->lokasi }}
-                                    <br>
-                                    <i class="bi-calendar"></i> {{ $item->event->tanggal }}
-                                    <br>
-                                    <i class="bi-clock"></i> {{ $item->event->waktu_mulai }}
+                                    <img src="{{ asset('storage/' . $item->event->gambar) }}"
+                                        alt="Design for Everyone" class="card-img-top w-100"
+                                        style="border-radius: 20px;">
                                 </div>
-                                <div class="flex-fill text-primary">Rp.
-                                    {{ number_format($item->event->harga, 0, ',', '.') }}</div>
                             </div>
-                        </div>
-                        <div class="col">
-                            <form action="{{ route('cetak.tiket', $item->id) }}" method="GET">
-                                @csrf
-                                <button class="btn btn-primary">cetak tiket</button>
-                            </form>
-                            <a href="{{ route('user.review', $item->id_event) }}"
-                                class=" mt-3 btn btn-info text-light">Review</a>
+                            <!-- Content Column -->
+                            <div class="col-6">
+                                <div class="mb-2 p-2">
+                                    <div class="title">{{ $item->event->nama_event }}</div>
+                                    <div class="info">
+                                        <i class="bi-geo-alt"></i> {{ $item->event->lokasi }}
+                                        <br>
+                                        <i class="bi-calendar"></i> {{ $item->event->tanggal }}
+                                        <br>
+                                        <i class="bi-clock"></i> {{ $item->event->waktu_mulai }}
+                                    </div>
+                                    <div class="flex-fill text-primary">Rp.
+                                        {{ number_format($item->event->harga, 0, ',', '.') }}</div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <form action="{{ route('cetak.tiket', $item->id) }}" method="GET">
+                                    @csrf
+                                    <button class="btn btn-primary">cetak tiket</button>
+                                </form>
+                                <a href="{{ route('user.review', $item->id_event) }}"
+                                    class=" mt-3 btn btn-info text-light">Review</a>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endif
             @endforeach
 
         </div>
