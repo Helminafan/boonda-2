@@ -55,7 +55,7 @@
                                             @endphp
 
                                             {{-- loop sebanyak jumlah tiket --}}
-                                            @for ($i = 1; $i <= $item->jumlah_tiket; $i++)
+                                            @for ($i = 1; $i <= $item->jumlaht; $i++)
                                                 @php
                                                     $kode_tiket = "$tanggal-$idFormatted-$i";
                                                 @endphp
