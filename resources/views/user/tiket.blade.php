@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Tiket Event</title>
@@ -63,36 +64,37 @@
         }
     </style>
 </head>
+
 <body>
-    <div class="ticket">
-        <div class="header">
-            <h1>{{ $tiket->event->nama_event ?? 'Nama Event' }}</h1>
-            <p>{{ $tiket->event->tanggal ?? 'Tanggal Event' }}</p>
-        </div>
+    @foreach ($kode_tiket as $kode)
+        <div class="ticket" style="page-break-after: always;">
+            <div class="header">
+                <h1>{{ $tiket->event->nama_event ?? 'Nama Event' }}</h1>
+                <p>{{ $tiket->event->tanggal ?? 'Tanggal Event' }}</p>
+            </div>
 
-        <div class="user-details">
-            <p><span class="label">Nama:</span> {{ $tiket->user->name ?? 'Nama Pengguna' }}</p>
-            <p><span class="label">Email:</span> {{ $tiket->user->email ?? 'Email Pengguna' }}</p>
-        </div>
+            <div class="user-details">
+                <p><span class="label">Nama:</span> {{ $tiket->user->name ?? 'Nama Pengguna' }}</p>
+                <p><span class="label">Email:</span> {{ $tiket->user->email ?? 'Email Pengguna' }}</p>
+            </div>
 
-        <div class="event-details">
-            <p><span class="label">Lokasi:</span> {{ $tiket->event->lokasi ?? 'Lokasi Event' }}</p>
-            <p><span class="label">Waktu:</span> {{ $tiket->event->waktu_mulai ?? 'Waktu Event' }}</p>
-        </div>
+            <div class="event-details">
+                <p><span class="label">Lokasi:</span> {{ $tiket->event->lokasi ?? 'Lokasi Event' }}</p>
+                <p><span class="label">Waktu:</span> {{ $tiket->event->waktu_mulai ?? 'Waktu Event' }}</p>
+            </div>
 
-        <div class="code-box">
-            KODE TIKET: {{ $kode_tiket ?? 'XXXX-XXXX' }}
-        </div>
+            <div class="code-box">
+                KODE TIKET: {{ $kode }}
+            </div>
 
-        <div class="qr">
-            @if(isset($qrCode))
-                <img src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(100)->generate($kode_tiket)) !!} ">
-            @endif
-        </div>
+           
 
-        <div class="footer">
-            Harap tunjukkan tiket ini saat registrasi di lokasi acara.
+            <div class="footer">
+                Harap tunjukkan tiket ini saat registrasi di lokasi acara.
+            </div>
         </div>
-    </div>
+    @endforeach
+
 </body>
+
 </html>

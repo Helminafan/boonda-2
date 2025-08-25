@@ -33,7 +33,7 @@
                                     <div class="col">
                                         <h3 class="card-title">DataTable Peserta</h3>
                                     </div>
-                                    
+
                                 </div>
                             </div>
                             <!-- /.card-header -->
@@ -52,16 +52,23 @@
                                             @php
                                                 $tanggal = $item->created_at->format('Ymd');
                                                 $idFormatted = str_pad($item->id, 5, '0', STR_PAD_LEFT);
-                                                $kode_tiket = "$tanggal-$idFormatted";
                                             @endphp
-                                            <tr>
-                                                <td>{{ $item->user->name }}</td>
-                                                <td>{{ $kode_tiket }}</td>
-                                                <td>{{ $item->event->tanggal }}</td>
-                                                <td>{{ $item->event->waktu_mulai }}</td>
-                                            </tr>
+
+                                            {{-- loop sebanyak jumlah tiket --}}
+                                            @for ($i = 1; $i <= $item->jumlah_tiket; $i++)
+                                                @php
+                                                    $kode_tiket = "$tanggal-$idFormatted-$i";
+                                                @endphp
+                                                <tr>
+                                                    <td>{{ $item->user->name }}</td>
+                                                    <td>{{ $kode_tiket }}</td>
+                                                    <td>{{ $item->event->tanggal }}</td>
+                                                    <td>{{ $item->event->waktu_mulai }}</td>
+                                                </tr>
+                                            @endfor
                                         @endforeach
                                     </tbody>
+
                                 </table>
                             </div>
                             <!-- /.card-body -->

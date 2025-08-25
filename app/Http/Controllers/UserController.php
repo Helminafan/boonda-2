@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use RealRashid\SweetAlert\Facades\Alert ;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class UserController extends Controller
 {
@@ -25,7 +25,7 @@ class UserController extends Controller
             ->limit(3)
             ->get();
 
-        $kolaboratoruser = User::where('role','kolaborator')->get();
+        $kolaboratoruser = User::where('role', 'kolaborator')->get();
 
         // Query Event awal (untuk filter dynamic)
         $query = DB::table('events');
@@ -63,7 +63,7 @@ class UserController extends Controller
         // Iklan tetap
         $iklan = DB::table('events')->where('keterangan', 'aktif')->get();
 
-        return view('user.index', compact('images', 'events', 'iklan', 'kolaboratoruser','kota'));
+        return view('user.index', compact('images', 'events', 'iklan', 'kolaboratoruser', 'kota'));
     }
 
 
@@ -121,7 +121,7 @@ class UserController extends Controller
     {
 
         $query = DB::table('events');
-         $kolaboratoruser = User::where('role','kolaborator')->get();
+        $kolaboratoruser = User::where('role', 'kolaborator')->get();
         $kota = Event::all();
 
         // Filter Kota
@@ -151,10 +151,11 @@ class UserController extends Controller
 
         // Ambil hasil akhir (limit 9)
         $events = $query->orderBy('created_at', 'desc')->get();
-        return view('user.katalog', compact('events','kota','kolaboratoruser'));
+        return view('user.katalog', compact('events', 'kota', 'kolaboratoruser'));
     }
 
-    public function profilUser($id)  {
+    public function profilUser($id)
+    {
         $user = User::find($id);
         return view('user.profileusser', compact('user'));
     }
@@ -170,10 +171,10 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $user->name = $request->name;
         $user->email = $request->email;
-       
+
         $user->alamat = $request->alamat;
         $user->no_telp = $request->no_telp;
-        
+
         $user->save();
 
         return redirect()->route('user.profiluser', $id)->with('success', 'User updated successfully.');
@@ -225,10 +226,10 @@ class UserController extends Controller
             $event = Event::findOrFail($request->id_event);
 
             // Cek apakah kuota masih tersedia
-            if ($event->kuota <= 0) {
+            $jumlah_tiket = $request->jumlah;
+            if ($event->kuota <= $jumlah_tiket) {
                 return redirect()->back()->with('error', 'Kuota tiket telah habis.');
             }
-            $jumlah_tiket = $request->jumlah;
 
             // Kurangi kuota
             $event->kuota -= $jumlah_tiket;
@@ -253,7 +254,8 @@ class UserController extends Controller
             return redirect()->back()->with('error', 'Terjadi kesalahan saat memesan: ' . $e->getMessage());
         }
     }
-    public function pesanan_update(Request $request){
+    public function pesanan_update(Request $request)
+    {
         $idtiket = $request->id_tiket;
         $pemesanan = Pemesanan::where('id', $idtiket)->first();
         $pemesanan->status = 'sudah_bayar';
@@ -276,11 +278,22 @@ class UserController extends Controller
     public function cetak($id)
     {
         $tiket = Pemesanan::with('event', 'user')->findOrFail($id);
+
         $tanggal = $tiket->created_at->format('Ymd');
-        $idFormatted = str_pad($tiket->id, 5, '0', STR_PAD_LEFT); // contoh: 00023
-        $kode_tiket = "$tanggal-$idFormatted";
-        $pdf = Pdf::loadView('user.tiket', compact('tiket', 'kode_tiket'));
+        $idFormatted = str_pad($tiket->id, 5, '0', STR_PAD_LEFT);
+
+        // bikin array kode tiket sesuai jumlah tiket yang dibeli
+        $kode_tiket = [];
+        for ($i = 1; $i <= $tiket->jumlah; $i++) {
+            $kode_tiket[] = "$tanggal-$idFormatted-$i";
+        }
+
+        // kirim semua tiket dan kode_tiket ke view
+        $pdf = Pdf::loadView('user.tiket', [
+            'tiket' => $tiket,
+            'kode_tiket' => $kode_tiket,
+        ]);
+
         return $pdf->stream('tiket.pdf');
     }
-      
 }

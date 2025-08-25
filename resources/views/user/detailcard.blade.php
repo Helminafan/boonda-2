@@ -44,9 +44,7 @@
                         <a class="nav-link text-white" href="{{ url('/') }}#home">Home</a>
                     </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="#rekomendasi">Rekomendasi</a>
-                    </li>
+                   
                     <li class="nav-item">
                         <a class="nav-link text-white" href="{{ route('kelasku.view') }}">Kelasku</a>
                     </li>
